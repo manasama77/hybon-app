@@ -87,10 +87,12 @@ class SalesOrderController extends Controller
                 'master_barangs.satuan',
                 'manufacture_materials.phase_seq',
                 'manufacture_materials.notes',
+                'users.name as created_by',
             ])
                 ->leftJoin('sales_orders', 'sales_orders.id', 'manufacture_materials.sales_order_id')
                 ->leftJoin('stocks', 'stocks.id', 'manufacture_materials.stock_id')
                 ->leftJoin('master_barangs', 'master_barangs.id', 'stocks.master_barang_id')
+                ->leftJoin('users', 'users.id', 'manufacture_materials.created_by')
                 ->where('sales_orders.id', $id)
                 ->orderBy('manufacture_materials.created_at', 'asc')
                 ->get();

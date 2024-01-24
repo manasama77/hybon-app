@@ -105,6 +105,7 @@
                                         <th>Jumlah</th>
                                         <th>Satuan</th>
                                         <th>Notes</th>
+                                        <th>By</th>
                                     </tr>
                                 </thead>
                                 <tbody id="v_body"></tbody>
@@ -156,6 +157,7 @@
                         <td>${el.qty}</td>
                         <td>${el.satuan}</td>
                         <td>${el.phase_seq.toUpperCase()} -  ${el.notes}</td>
+                        <td>${el.created_by}</td>
                     </tr>
                     `
 
