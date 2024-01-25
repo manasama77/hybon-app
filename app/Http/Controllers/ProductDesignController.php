@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\MetodeMolding;
 use App\Models\SalesOrder;
 use App\Models\Stock;
+use App\Models\StockMonitor;
 use Illuminate\Http\Request;
 
 class ProductDesignController extends Controller
@@ -21,18 +22,18 @@ class ProductDesignController extends Controller
         ])->where('status', 'product design')->latest()->get();
 
         $metode_moldings = MetodeMolding::orderBy('name', 'asc')->get();
-        $stocks = Stock::select([
-            'stocks.id',
-            'stocks.kode_barang',
-            'stocks.panjang',
-            'stocks.lebar',
+        $stocks = StockMonitor::select([
+            'stock_monitors.id',
+            'stock_monitors.kode_barang',
+            'stock_monitors.panjang',
+            'stock_monitors.lebar',
             'master_barangs.satuan',
         ])
-            ->leftJoin('master_barangs', 'master_barangs.id', '=', 'stocks.master_barang_id')
-            ->where('stocks.panjang', '!=', 0)
-            ->where('stocks.lebar', '!=', 0)
-            ->where('stocks.tipe_stock', '=', 'lembar')
-            ->orderBy('stocks.kode_barang', 'asc')
+            ->leftJoin('master_barangs', 'master_barangs.id', '=', 'stock_monitors.master_barang_id')
+            ->where('stock_monitors.panjang', '!=', 0)
+            ->where('stock_monitors.lebar', '!=', 0)
+            ->where('stock_monitors.tipe_stock', '=', 'lembar')
+            ->orderBy('stock_monitors.kode_barang', 'asc')
             ->get();
 
         $data = [

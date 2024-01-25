@@ -9,6 +9,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Finishing1Controller;
 use App\Http\Controllers\Finishing2Controller;
 use App\Http\Controllers\Finishing3Controller;
+use App\Http\Controllers\LandingController;
 use App\Http\Controllers\Manufacturing1Controller;
 use App\Http\Controllers\Manufacturing2Controller;
 use App\Http\Controllers\Manufacturing3Controller;
@@ -23,6 +24,8 @@ use App\Http\Controllers\RfsController;
 use App\Http\Controllers\RfsLunasController;
 use App\Http\Controllers\SalesOrderController;
 use App\Http\Controllers\StockInController;
+use App\Http\Controllers\StockMonitorController;
+use App\Http\Controllers\StockOutController;
 use App\Http\Controllers\SubMoldingController;
 use App\Http\Controllers\TipeBarangController;
 use App\Http\Controllers\UserManagementController;
@@ -38,7 +41,9 @@ use App\Http\Controllers\UserManagementController;
 |
 */
 
-Route::get('/', [AuthenticatedSessionController::class, 'create']);
+Route::get('/', [LandingController::class, 'index']);
+
+Route::get('/login', [AuthenticatedSessionController::class, 'create']);
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth'])->name('dashboard');
 
@@ -49,6 +54,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/sales-order/edit/{id}', [SalesOrderController::class, 'edit'])->name('sales-order.edit');
     Route::post('/sales-order/update/{id}', [SalesOrderController::class, 'update'])->name('sales-order.update');
     Route::post('/sales-order/destroy/{id}', [SalesOrderController::class, 'destroy'])->name('sales-order.destroy');
+
+    Route::get('/product-design', [ProductDesignController::class, 'index'])->name('product-design');
+    Route::post('/sales-order/update_sales_order_pure', [SalesOrderController::class, 'update_sales_order_pure'])->name('sales-order.update_sales_order_pure');
+    Route::post('/sales-order/update_sales_order_skinning', [SalesOrderController::class, 'update_sales_order_skinning'])->name('sales-order.update_sales_order_skinning');
+    Route::post('/sales-order/store_status_pure', [SalesOrderController::class, 'store_status_pure'])->name('sales-order.store_status_pure');
+    Route::get('/sales-order/get_status_pure/{id}', [SalesOrderController::class, 'get_status_pure'])->name('sales-order.get_status_pure');
+    Route::post('/sales-order/destroy_status_pure/{id}', [SalesOrderController::class, 'destroy_status_pure'])->name('sales-order.destroy_status_pure');
 
     // process move
     Route::post('/sales-order/move/product-design/{id}', [SalesOrderController::class, 'move_product_design'])->name('sales-order.move.product-design');
@@ -65,15 +77,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/sales-order/show/{id}/{metode}', [SalesOrderController::class, 'show'])->name('sales-order.show');
     Route::get('/sales-order/show_for_manufacturing/{id}', [SalesOrderController::class, 'show_for_manufacturing'])->name('sales-order.show_for_manufacturing');
     Route::get('/sales-order/show_manufacturing_log/{id}', [SalesOrderController::class, 'show_manufacturing_log'])->name('sales-order.show_manufacturing_log');
-
-    Route::post('/sales-order/store_status_pure', [SalesOrderController::class, 'store_status_pure'])->name('sales-order.store_status_pure');
-    Route::get('/sales-order/get_status_pure/{id}', [SalesOrderController::class, 'get_status_pure'])->name('sales-order.get_status_pure');
-    Route::post('/sales-order/destroy_status_pure/{id}', [SalesOrderController::class, 'destroy_status_pure'])->name('sales-order.destroy_status_pure');
-
-    Route::post('/sales-order/update_sales_order_pure', [SalesOrderController::class, 'update_sales_order_pure'])->name('sales-order.update_sales_order_pure');
-    Route::post('/sales-order/update_sales_order_skinning', [SalesOrderController::class, 'update_sales_order_skinning'])->name('sales-order.update_sales_order_skinning');
-
-    Route::get('/product-design', [ProductDesignController::class, 'index'])->name('product-design');
 
     Route::get('/manufacturing-1', [Manufacturing1Controller::class, 'index'])->name('manufacturing-1');
     Route::post('/manufacturing-1/update/{sales_order_id}', [Manufacturing1Controller::class, 'update'])->name('manufacturing-1.update');
@@ -138,10 +141,14 @@ Route::middleware('auth')->group(function () {
         Route::post('/master-barang/update/{id}', [MasterBarangController::class, 'update'])->name('warehouse.master-barang.update');
         Route::post('/master-barang/destroy/{id}', [MasterBarangController::class, 'destroy'])->name('warehouse.master-barang.destroy');
 
+        Route::get('/stock-monitor', [StockMonitorController::class, 'index'])->name('warehouse.stock-monitor');
+
         Route::get('/stock-in', [StockInController::class, 'index'])->name('warehouse.stock-in');
         Route::get('/stock-in/create', [StockInController::class, 'create'])->name('warehouse.stock-in.create');
         Route::post('/stock-in/store', [StockInController::class, 'store'])->name('warehouse.stock-in.store');
         Route::post('/stock-in/destroy/{id}', [StockInController::class, 'destroy'])->name('warehouse.stock-in.destroy');
+
+        Route::get('/stock-out', [StockOutController::class, 'index'])->name('warehouse.stock-out');
     });
 
     Route::prefix('data-reference')->group(function () {

@@ -12,12 +12,13 @@ class Stock extends Model
 
     protected $fillable = [
         'kode_barang',
-        'master_barang_id',
+        'stock_monitor_id',
         'tipe_stock',
         'panjang',
         'lebar',
         'qty',
         'status',
+        'sales_order_id',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -26,8 +27,18 @@ class Stock extends Model
         'deleted_by',
     ];
 
-    public function master_barang()
+    public function stock_monitor()
     {
-        return $this->belongsTo(MasterBarang::class, 'master_barang_id');
+        return $this->belongsTo(StockMonitor::class, 'stock_monitor_id');
+    }
+
+    public function sales_order()
+    {
+        return $this->belongsTo(SalesOrder::class, 'sales_order_id');
+    }
+
+    public function created_name()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 }

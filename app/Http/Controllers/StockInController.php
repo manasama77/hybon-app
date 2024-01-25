@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use App\Models\Stock;
 use App\Models\StockSeq;
 use App\Models\MasterBarang;
+use App\Models\StockMonitor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -18,8 +19,8 @@ class StockInController extends Controller
         $page_title = "Stock Masuk";
 
         $datas = Stock::with([
-            'master_barang',
-            'master_barang.tipe_barang',
+            'stock_monitor.master_barang',
+            'stock_monitor.master_barang.tipe_barang',
         ])->where('status', 'in')->latest()->get();
 
         $data = [
@@ -48,25 +49,68 @@ class StockInController extends Controller
     {
         $request->validate([
             'master_barang_id' => ['required', 'exists:master_barangs,id'],
-            'panjang'          => ['nullable'],
-            'lebar'            => ['nullable'],
-            'qty'              => ['nullable'],
+            'panjang'          => ['nullable', 'min:1'],
+            'lebar'            => ['nullable', 'min:1'],
+            'qty'              => ['nullable', 'min:1'],
         ]);
 
         try {
             DB::beginTransaction();
 
             $master_barang = MasterBarang::find($request->master_barang_id);
-            $check_stock   = Stock::where('master_barang_id', $request->master_barang_id)->where('status', 'in')->first();
 
-            if ($master_barang->tipe_barang == 'satuan' && $check_stock) {
-                Stock::find($check_stock->id)->increment('qty');
-            } else {
-                $kode_barang   = $this->generate_kode_barang($request->master_barang_id, $master_barang->tipe_stock, $master_barang->kode_barang);
+            if ($master_barang->tipe_stock == 'satuan') {
+                $check_stock = StockMonitor::where('master_barang_id', $request->master_barang_id)->first();
+                if ($check_stock) {
+                    $stock_monitor_id = $check_stock->id;
+                    $kode_barang      = $check_stock->kode_barang;
+                    StockMonitor::find($stock_monitor_id)->increment('qty', $request->qty);
+                } else {
+                    $kode_barang   = $this->generate_kode_barang($request->master_barang_id, $master_barang->tipe_stock, $master_barang->kode_barang);
+
+                    $exec                   = new StockMonitor();
+                    $exec->kode_barang      = $kode_barang;
+                    $exec->master_barang_id = $request->master_barang_id;
+                    $exec->tipe_stock       = $master_barang->tipe_stock;
+                    $exec->panjang          = "0";
+                    $exec->lebar            = "0";
+                    $exec->qty              = $request->qty;
+                    $exec->created_by       = auth()->user()->id;
+                    $exec->updated_by       = auth()->user()->id;
+                    $exec->save();
+                    $stock_monitor_id = $exec->id;
+                }
 
                 $data = [
                     'kode_barang'      => $kode_barang,
-                    'master_barang_id' => $request->master_barang_id,
+                    'stock_monitor_id' => $stock_monitor_id,
+                    'tipe_stock'       => $master_barang->tipe_stock,
+                    'panjang'          => 0,
+                    'lebar'            => 0,
+                    'qty'              => $request->qty ?? 0,
+                    'status'           => 'in',
+                    'created_by'       => Auth::user()->id,
+                    'updated_by'       => Auth::user()->id,
+                ];
+                Stock::create($data);
+            } else {
+                $kode_barang   = $this->generate_kode_barang($request->master_barang_id, $master_barang->tipe_stock, $master_barang->kode_barang);
+
+                $exec                   = new StockMonitor();
+                $exec->kode_barang      = $kode_barang;
+                $exec->master_barang_id = $request->master_barang_id;
+                $exec->tipe_stock       = $master_barang->tipe_stock;
+                $exec->panjang          = $request->panjang;
+                $exec->lebar            = $request->lebar;
+                $exec->qty              = 0;
+                $exec->created_by       = auth()->user()->id;
+                $exec->updated_by       = auth()->user()->id;
+                $exec->save();
+                $stock_monitor_id = $exec->id;
+
+                $data = [
+                    'kode_barang'      => $kode_barang,
+                    'stock_monitor_id' => $stock_monitor_id,
                     'tipe_stock'       => $master_barang->tipe_stock,
                     'panjang'          => $request->panjang ?? 0,
                     'lebar'            => $request->lebar ?? 0,
@@ -75,7 +119,6 @@ class StockInController extends Controller
                     'created_by'       => Auth::user()->id,
                     'updated_by'       => Auth::user()->id,
                 ];
-
                 Stock::create($data);
             }
 
@@ -91,7 +134,13 @@ class StockInController extends Controller
     public function destroy($id)
     {
         $data             = Stock::find($id);
-        $data->deleted_by = Auth::user()->id;
+        if ($data->tipe_stock == 'satuan') {
+            $data->stock_monitor()->decrement('qty', $data->qty);
+        } else {
+            $data->stock_monitor()->delete();
+        }
+        $data->deleted_by = auth()->user()->id;
+        $data->save();
         $data->delete();
 
         return response()->json(['success' => true]);
@@ -104,7 +153,7 @@ class StockInController extends Controller
         if ($tipe_stock == "satuan") {
             $kode_barang = $kode_barang . "-" . $now->format('Ymd');
         } else {
-            $last_seq = Stock::where('master_barang_id', $master_barang_id)->where('tipe_stock', 'lembar')->count();
+            $last_seq = StockMonitor::where('master_barang_id', $master_barang_id)->where('tipe_stock', 'lembar')->count();
             $last_seq++;
             $kode_barang = $kode_barang . "-" . $now->format('Ymd') . "-" . $last_seq;
         }

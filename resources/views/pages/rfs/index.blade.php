@@ -61,7 +61,7 @@
                                                     <td>{{ $data->title }}</td>
                                                     <td>{{ $data->motif->name }}</td>
                                                     <td>{{ strtoupper($data->metode) }}</td>
-                                                    <td>{{ $data->barang_jadi->name }}</td>
+                                                    <td>{{ $data->barang_jadi->name ?? '-' }}</td>
                                                     <td>{{ $data->order_from->name }}</td>
                                                     <td>{{ $data->nama_customer }}</td>
                                                     <td>{{ $data->alamat }}</td>

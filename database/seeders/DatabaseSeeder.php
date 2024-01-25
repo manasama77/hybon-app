@@ -19,10 +19,10 @@ class DatabaseSeeder extends Seeder
             TipeBarangSeeder::class,
             OrderFromSeeder::class,
             MasterBarangSeeder::class,
-            StockSeeder::class,
+            // StockSeeder::class,
             MetodeMoldingSeeder::class,
             SubMoldingSeeder::class,
-            SalesOrderSeeder::class,
+            // SalesOrderSeeder::class,
         ]);
     }
 }

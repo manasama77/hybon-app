@@ -145,7 +145,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-12 d-flex justify-content-end">
+                        <div class="col-12 d-flex justify-content-end mb-5">
                             <a href="{{ route('sales-order') }}" class="btn btn-dark mr-1">
                                 <i class="fa-solid fa-backward"></i> Kembali
                             </a>

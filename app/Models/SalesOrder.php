@@ -81,6 +81,11 @@ class SalesOrder extends Model
         $this->hasMany(ManufactureMaterial::class, 'sales_order_id', 'id');
     }
 
+    public function tracking_log()
+    {
+        $this->hasMany(TrackingLog::class);
+    }
+
 
     public function setNamaCustomerAttribute($value)
     {

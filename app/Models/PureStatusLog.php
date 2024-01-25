@@ -14,11 +14,19 @@ class PureStatusLog extends Model
     protected $fillable = [
         'sales_order_id',
         'notes',
+        'created_by',
+        'updated_by',
+        'deleted_by',
     ];
 
     public function sales_order()
     {
         return $this->belongsTo(SalesOrder::class);
+    }
+
+    public function created_name()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     public function getCreatedAtAttribute($value)

@@ -9,11 +9,11 @@ use Carbon\Carbon;
 use App\Models\Motif;
 use App\Models\OrderFrom;
 use App\Models\SalesOrder;
-use App\Models\MasterBarang;
 use App\Models\PureStatusLog;
 use Illuminate\Http\Request;
 use App\Models\SalesOrderSeq;
 use App\Models\Stock;
+use App\Models\TrackingLog;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -127,7 +127,7 @@ class SalesOrderController extends Controller
             'title'          => ['required', 'max:255', 'string'],
             'motif_id'       => ['required', 'exists:motifs,id'],
             'metode'         => ['required', 'in:pure,skinning'],
-            'barang_jadi_id' => ['required', 'exists:barang_jadis,id'],
+            'barang_jadi_id' => ['nullable', 'exists:barang_jadis,id'],
             'dp'             => ['required'],
             'harga_jual'     => ['required'],
             'nama_customer'  => ['required', 'max:255'],
@@ -148,7 +148,7 @@ class SalesOrderController extends Controller
                 'metode'         => $request->metode,
                 'dp'             => $request->dp,
                 'harga_jual'     => $request->harga_jual,
-                'barang_jadi_id' => $request->barang_jadi_id,
+                'barang_jadi_id' => $request->barang_jadi_id ?? null,
                 'nama_customer'  => $request->nama_customer,
                 'alamat'         => $request->alamat,
                 'no_telp'        => $request->no_telp,
@@ -158,7 +158,14 @@ class SalesOrderController extends Controller
                 'updated_by'     => Auth::user()->id,
             ];
 
-            SalesOrder::create($data);
+            $exec = SalesOrder::create($data);
+
+            $log                 = new TrackingLog();
+            $log->sales_order_id = $exec->id;
+            $log->status         = "sales order";
+            $log->created_by     = auth()->user()->id;
+            $log->updated_by     = auth()->user()->id;
+            $log->save();
 
             DB::commit();
 
@@ -261,6 +268,13 @@ class SalesOrderController extends Controller
             $data->updated_by = Auth::user()->id;
             $data->save();
 
+            $log                 = new TrackingLog();
+            $log->sales_order_id = $id;
+            $log->status         = "product design";
+            $log->created_by     = auth()->user()->id;
+            $log->updated_by     = auth()->user()->id;
+            $log->save();
+
             return response()->json(['success' => true, 'message' => 'Pindah data berhasil']);
         } catch (Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
@@ -301,6 +315,13 @@ class SalesOrderController extends Controller
                 }
 
                 $data->status     = "manufacturing cutting";
+
+                $log                 = new TrackingLog();
+                $log->sales_order_id = $id;
+                $log->status         = "manufacturing cutting";
+                $log->created_by     = auth()->user()->id;
+                $log->updated_by     = auth()->user()->id;
+                $log->save();
             } else {
                 if ($panjang_skinning == 0 || $lebar_skinning == 0) {
                     throw new Exception('Panjang dan lebar skinning belum terisi');
@@ -358,6 +379,13 @@ class SalesOrderController extends Controller
                 }
 
                 $data->status = "manufacturing 1";
+
+                $log                 = new TrackingLog();
+                $log->sales_order_id = $id;
+                $log->status         = "manufacturing 1";
+                $log->created_by     = auth()->user()->id;
+                $log->updated_by     = auth()->user()->id;
+                $log->save();
             }
 
             $data->updated_by = Auth::user()->id;
@@ -382,12 +410,19 @@ class SalesOrderController extends Controller
                 throw new Exception('Photo manufacturing 1 Belum Diupload');
             }
 
-            $count_material = ManufactureMaterial::where('sales_order_id', $id)->where('phase_seq', 1)->count();
-            if ($count_material == 0) {
-                throw new Exception('Material Belum Diisi');
-            }
+            // $count_material = ManufactureMaterial::where('sales_order_id', $id)->where('phase_seq', 1)->count();
+            // if ($count_material == 0) {
+            //     throw new Exception('Material Belum Diisi');
+            // }
 
             $data->status = "manufacturing 2";
+
+            $log                 = new TrackingLog();
+            $log->sales_order_id = $id;
+            $log->status         = "manufacturing 2";
+            $log->created_by     = auth()->user()->id;
+            $log->updated_by     = auth()->user()->id;
+            $log->save();
 
             $data->updated_by = Auth::user()->id;
             $data->save();
@@ -408,12 +443,19 @@ class SalesOrderController extends Controller
                 throw new Exception('Photo manufacturing 2 Belum Diupload');
             }
 
-            $count_material = ManufactureMaterial::where('sales_order_id', $id)->where('phase_seq', 2)->count();
-            if ($count_material == 0) {
-                throw new Exception('Material Belum Diisi');
-            }
+            // $count_material = ManufactureMaterial::where('sales_order_id', $id)->where('phase_seq', 2)->count();
+            // if ($count_material == 0) {
+            //     throw new Exception('Material Belum Diisi');
+            // }
 
             $data->status = "manufacturing 3";
+
+            $log                 = new TrackingLog();
+            $log->sales_order_id = $id;
+            $log->status         = "manufacturing 3";
+            $log->created_by     = auth()->user()->id;
+            $log->updated_by     = auth()->user()->id;
+            $log->save();
 
             $data->updated_by = Auth::user()->id;
             $data->save();
@@ -434,12 +476,19 @@ class SalesOrderController extends Controller
                 throw new Exception('Photo manufacturing cutting Belum Diupload');
             }
 
-            $count_material = ManufactureMaterial::where('sales_order_id', $id)->where('phase_seq', 'cutting')->count();
-            if ($count_material == 0) {
-                throw new Exception('Material Belum Diisi');
-            }
+            // $count_material = ManufactureMaterial::where('sales_order_id', $id)->where('phase_seq', 'cutting')->count();
+            // if ($count_material == 0) {
+            //     throw new Exception('Material Belum Diisi');
+            // }
 
             $data->status = "manufacturing infuse";
+
+            $log                 = new TrackingLog();
+            $log->sales_order_id = $id;
+            $log->status         = "manufacturing infuse";
+            $log->created_by     = auth()->user()->id;
+            $log->updated_by     = auth()->user()->id;
+            $log->save();
 
             $data->updated_by = Auth::user()->id;
             $data->save();
@@ -460,12 +509,19 @@ class SalesOrderController extends Controller
                 throw new Exception('Photo manufacturing 3 Belum Diupload');
             }
 
-            $count_material = ManufactureMaterial::where('sales_order_id', $id)->where('phase_seq', 3)->count();
-            if ($count_material == 0) {
-                throw new Exception('Material Belum Diisi');
-            }
+            // $count_material = ManufactureMaterial::where('sales_order_id', $id)->where('phase_seq', 3)->count();
+            // if ($count_material == 0) {
+            //     throw new Exception('Material Belum Diisi');
+            // }
 
             $data->status = "finishing 1";
+
+            $log                 = new TrackingLog();
+            $log->sales_order_id = $id;
+            $log->status         = "finishing 1";
+            $log->created_by     = auth()->user()->id;
+            $log->updated_by     = auth()->user()->id;
+            $log->save();
 
             $data->updated_by = Auth::user()->id;
             $data->save();
@@ -486,12 +542,19 @@ class SalesOrderController extends Controller
                 throw new Exception('Photo manufacturing Infuse Belum Diupload');
             }
 
-            $count_material = ManufactureMaterial::where('sales_order_id', $id)->where('phase_seq', 'infuse')->count();
-            if ($count_material == 0) {
-                throw new Exception('Material Belum Diisi');
-            }
+            // $count_material = ManufactureMaterial::where('sales_order_id', $id)->where('phase_seq', 'infuse')->count();
+            // if ($count_material == 0) {
+            //     throw new Exception('Material Belum Diisi');
+            // }
 
             $data->status = "finishing 1";
+
+            $log                 = new TrackingLog();
+            $log->sales_order_id = $id;
+            $log->status         = "finishing 1";
+            $log->created_by     = auth()->user()->id;
+            $log->updated_by     = auth()->user()->id;
+            $log->save();
 
             $data->updated_by = Auth::user()->id;
             $data->save();
@@ -512,12 +575,19 @@ class SalesOrderController extends Controller
                 throw new Exception('Photo finishing 1 Belum Diupload');
             }
 
-            $count_material = ManufactureMaterial::where('sales_order_id', $id)->where('phase_seq', 'finishing 1')->count();
-            if ($count_material == 0) {
-                throw new Exception('Material Belum Diisi');
-            }
+            // $count_material = ManufactureMaterial::where('sales_order_id', $id)->where('phase_seq', 'finishing 1')->count();
+            // if ($count_material == 0) {
+            //     throw new Exception('Material Belum Diisi');
+            // }
 
             $data->status = "finishing 2";
+
+            $log                 = new TrackingLog();
+            $log->sales_order_id = $id;
+            $log->status         = "finishing 2";
+            $log->created_by     = auth()->user()->id;
+            $log->updated_by     = auth()->user()->id;
+            $log->save();
 
             $data->updated_by = Auth::user()->id;
             $data->save();
@@ -538,12 +608,19 @@ class SalesOrderController extends Controller
                 throw new Exception('Photo finishing 2 Belum Diupload');
             }
 
-            $count_material = ManufactureMaterial::where('sales_order_id', $id)->where('phase_seq', 'finishing 2')->count();
-            if ($count_material == 0) {
-                throw new Exception('Material Belum Diisi');
-            }
+            // $count_material = ManufactureMaterial::where('sales_order_id', $id)->where('phase_seq', 'finishing 2')->count();
+            // if ($count_material == 0) {
+            //     throw new Exception('Material Belum Diisi');
+            // }
 
             $data->status = "finishing 3";
+
+            $log                 = new TrackingLog();
+            $log->sales_order_id = $id;
+            $log->status         = "finishing 3";
+            $log->created_by     = auth()->user()->id;
+            $log->updated_by     = auth()->user()->id;
+            $log->save();
 
             $data->updated_by = Auth::user()->id;
             $data->save();
@@ -564,12 +641,19 @@ class SalesOrderController extends Controller
                 throw new Exception('Photo finishing 3 Belum Diupload');
             }
 
-            $count_material = ManufactureMaterial::where('sales_order_id', $id)->where('phase_seq', 'finishing 3')->count();
-            if ($count_material == 0) {
-                throw new Exception('Material Belum Diisi');
-            }
+            // $count_material = ManufactureMaterial::where('sales_order_id', $id)->where('phase_seq', 'finishing 3')->count();
+            // if ($count_material == 0) {
+            //     throw new Exception('Material Belum Diisi');
+            // }
 
             $data->status = "rfs";
+
+            $log                 = new TrackingLog();
+            $log->sales_order_id = $id;
+            $log->status         = "rfs";
+            $log->created_by     = auth()->user()->id;
+            $log->updated_by     = auth()->user()->id;
+            $log->save();
 
             $data->updated_by = Auth::user()->id;
             $data->save();
@@ -580,6 +664,8 @@ class SalesOrderController extends Controller
         }
     }
 
+    // end move
+
     public function store_status_pure(Request $request)
     {
         try {
@@ -589,6 +675,8 @@ class SalesOrderController extends Controller
             PureStatusLog::create([
                 'sales_order_id' => $sales_order_id,
                 'notes'          => $status_pure,
+                'created_by'     => auth()->user()->id,
+                'updated_by'     => auth()->user()->id,
             ]);
 
             SalesOrder::find($sales_order_id)->update([
@@ -604,7 +692,7 @@ class SalesOrderController extends Controller
     public function get_status_pure($id)
     {
         try {
-            $data = PureStatusLog::where('sales_order_id', $id)->latest()->get();
+            $data = PureStatusLog::with('created_name')->where('sales_order_id', $id)->latest()->get();
             return response()->json(['success' => true, 'data' => $data, 'message' => "success"]);
         } catch (Exception $e) {
             return response()->json(['success' => false, 'data' => [], 'message' => $e->getMessage()]);
@@ -640,14 +728,12 @@ class SalesOrderController extends Controller
 
     public function update_sales_order_pure(Request $request)
     {
-        $title_pure             = $request->title_pure;
         $dp_pure                = $request->dp_pure;
         $sub_molding_id_pure    = $request->sub_molding_id_pure;
         $cost_molding_pure      = $request->cost_molding_pure;
         $sales_order_id_pure    = $request->sales_order_id_pure;
 
         $data = [
-            'title'             => $title_pure,
             'dp'                => $dp_pure,
             'sub_molding_id'    => $sub_molding_id_pure,
             'cost_molding_pure' => $cost_molding_pure,
@@ -666,7 +752,6 @@ class SalesOrderController extends Controller
         try {
             DB::beginTransaction();
 
-            $title_skinning          = $request->title_skinning;
             $dp_skinning             = $request->dp_skinning;
             $panjang_skinning        = $request->panjang_skinning;
             $lebar_skinning          = $request->lebar_skinning;
@@ -693,7 +778,6 @@ class SalesOrderController extends Controller
             }
 
             $data = [
-                'title'                   => $title_skinning,
                 'dp'                      => $dp_skinning,
                 'panjang_skinning'        => $panjang_skinning,
                 'lebar_skinning'          => $lebar_skinning,
@@ -730,5 +814,18 @@ class SalesOrderController extends Controller
             $kode_barang = $kode_barang . "-" . $now->format('Ymd') . "-" . $last_seq;
         }
         return $kode_barang;
+    }
+
+    public function destroy($id)
+    {
+        $motif = SalesOrder::find($id);
+        $track = TrackingLog::where("sales_order_id", $id)->count();
+        if ($track > 0) {
+            $motif->tracking_log()->delete();
+        }
+        $motif->deleted_by = auth()->user()->id;
+        $motif->delete();
+
+        return response()->json(['success' => true]);
     }
 }

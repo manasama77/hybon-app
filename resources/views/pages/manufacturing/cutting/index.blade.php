@@ -52,28 +52,30 @@
                                             @foreach ($datas as $data)
                                                 <tr>
                                                     <td>
-                                                        @if ($data->revisi_manufacturing_cutting > 0)
-                                                            <button type="button" class="btn btn-warning"
-                                                                onclick="showEdit('{{ $data->id }}')">
-                                                                Revisi
+                                                        <div class="btn-group">
+                                                            @if ($data->revisi_manufacturing_cutting > 0)
+                                                                <button type="button" class="btn btn-warning"
+                                                                    onclick="showEdit('{{ $data->id }}')">
+                                                                    Revisi
+                                                                </button>
+                                                            @endif
+                                                            @if ($data->revisi_manufacturing_cutting == 0)
+                                                                <button type="button" class="btn btn-info"
+                                                                    onclick="showEdit('{{ $data->id }}')">
+                                                                    Edit
+                                                                </button>
+                                                            @endif
+                                                            <button type="button" class="btn btn-success"
+                                                                onclick="askMove('{{ $data->id }}')">
+                                                                Submit
                                                             </button>
-                                                        @endif
-                                                        @if ($data->revisi_manufacturing_cutting == 0)
-                                                            <button type="button" class="btn btn-info"
-                                                                onclick="showEdit('{{ $data->id }}')">
-                                                                Edit
-                                                            </button>
-                                                        @endif
-                                                        <button type="button" class="btn btn-success"
-                                                            onclick="askMove('{{ $data->id }}')">
-                                                            Submit
-                                                        </button>
+                                                        </div>
                                                     </td>
                                                     <td>{{ $data->code_order }}</td>
                                                     <td>{{ $data->title }}</td>
                                                     <td>{{ $data->motif->name }}</td>
                                                     <td>{{ strtoupper($data->metode) }}</td>
-                                                    <td>{{ $data->barang_jadi->name }}</td>
+                                                    <td>{{ $data->barang_jadi->name ?? '-' }}</td>
                                                     <td>{{ $data->order_from->name }}</td>
                                                     <td>{{ $data->nama_customer }}</td>
                                                     <td>{{ $data->alamat }}</td>
@@ -113,7 +115,7 @@
                         </div>
                         <div class="form-group">
                             <label for="title">Title</label>
-                            <input type="text" class="form-control" id="title" name="title" required />
+                            <input type="text" class="form-control" id="title" name="title" readonly />
                         </div>
                         <div class="form-group">
                             <label for="dp">DP</label>
@@ -135,20 +137,39 @@
                             <select class="form-control" id="stock_id" name="stock_id">
                                 <option value=""></option>
                                 @foreach ($stocks as $stock)
-                                    <option value="{{ $stock->id }}" data-satuan="{{ $stock->satuan }}">
+                                    <option value="{{ $stock->id }}" data-satuan="{{ $stock->satuan }}"
+                                        data-tipe_stock="{{ $stock->tipe_stock }}">
                                         {{ $stock->kode_barang }}</option>
                                 @endforeach
                             </select>
                         </div>
-                        <div class="form-group">
+                        <div id="group_satuan" class="form-group" style="display: none;">
                             <label for="qty">QTY</label>
                             <div class="input-group">
                                 <input type="number" class="form-control" id="qty" name="qty" />
                                 <div class="input-group-append">
-                                    <span class="input-group-text" id="satuan"></span>
+                                    <span class="input-group-text satuan"></span>
                                 </div>
                             </div>
-
+                        </div>
+                        <div id="group_lembar" class="form-group" style="display: none;">
+                            <label for="qty">QTY</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">P</span>
+                                </div>
+                                <input type="number" class="form-control" id="panjang" name="panjang" />
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">x</span>
+                                </div>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">L</span>
+                                </div>
+                                <input type="number" class="form-control" id="lebar" name="lebar" />
+                                <div class="input-group-append">
+                                    <span class="input-group-text satuan"></span>
+                                </div>
+                            </div>
                         </div>
                         <button type="button" id="btn_tambah_material" class="btn btn-info btn-block mb-3">Tambah
                             Material</button>
@@ -190,7 +211,16 @@
 
             $('#stock_id').on('change', () => {
                 let satuan = $('#stock_id :selected').data('satuan')
-                $('#satuan').text(satuan)
+                $('.satuan').text(satuan)
+
+                let tipe_stock = $('#stock_id :selected').data('tipe_stock')
+                if (tipe_stock == "lembar") {
+                    $('#group_lembar').show();
+                    $('#group_satuan').hide();
+                } else {
+                    $('#group_lembar').hide();
+                    $('#group_satuan').show();
+                }
             })
 
             $('#photo').on('change', function() {
@@ -206,12 +236,10 @@
             $('#form-edit').on('submit', e => {
                 e.preventDefault()
 
-                let title = $('#title').val()
                 let dp = $('#dp').val()
 
                 let formData = new FormData()
                 formData.append('photo', $('#photo')[0].files[0])
-                formData.append('title', title)
                 formData.append('dp', dp)
 
                 $.ajax({
@@ -354,6 +382,8 @@
                 Swal.fire('Gagal!', e.responseText, 'error')
             }).done(e => {
                 console.log(e)
+
+                let metode = e.data.metode
 
                 $('#code_order').val(e.data.code_order)
                 $('#title').val(e.data.title)

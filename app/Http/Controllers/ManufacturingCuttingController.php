@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Exception;
 use App\Models\Stock;
 use App\Models\SalesOrder;
+use App\Models\StockMonitor;
 use Illuminate\Http\Request;
 use App\Models\ManufactureMaterial;
 
@@ -24,16 +25,20 @@ class ManufacturingCuttingController extends Controller
             ->latest()
             ->get();
 
-        $stocks = Stock::select([
-            'stocks.id',
-            'stocks.kode_barang',
-            'stocks.qty',
+        $stocks = StockMonitor::select([
+            'stock_monitors.id',
+            'stock_monitors.kode_barang',
+            'stock_monitors.panjang',
+            'stock_monitors.lebar',
+            'stock_monitors.qty',
             'master_barangs.satuan',
+            'stock_monitors.tipe_stock',
         ])
-            ->leftJoin('master_barangs', 'master_barangs.id', '=', 'stocks.master_barang_id')
-            ->where('stocks.qty', '!=', 0)
-            ->where('stocks.tipe_stock', '=', 'satuan')
-            ->orderBy('stocks.kode_barang', 'asc')
+            ->leftJoin('master_barangs', 'master_barangs.id', '=', 'stock_monitors.master_barang_id')
+            ->where('stock_monitors.panjang', '!=', 0)
+            ->where('stock_monitors.lebar', '!=', 0)
+            ->orWhere('stock_monitors.qty', '!=', 0)
+            ->orderBy('stock_monitors.kode_barang', 'asc')
             ->get();
 
         $data = [
@@ -144,7 +149,6 @@ class ManufacturingCuttingController extends Controller
                 $data->photo_manufacturing_cutting = $photoName;
             }
 
-            $data->title = $request->title;
             $data->dp    = $request->dp;
             $data->increment('revisi_manufacturing_cutting');
 

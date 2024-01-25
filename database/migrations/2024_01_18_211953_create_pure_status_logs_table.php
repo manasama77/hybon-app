@@ -18,6 +18,9 @@ return new class extends Migration
             $table->string('notes');
             $table->timestamps();
             $table->softDeletes();
+            $table->integer('created_by');
+            $table->integer('updated_by');
+            $table->integer('deleted_by')->nullable();
         });
     }
 

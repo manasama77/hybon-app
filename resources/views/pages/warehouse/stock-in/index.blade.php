@@ -28,7 +28,7 @@
                                 <h3 class="card-title">{{ $page_title }} List</h3>
                                 <div class="card-tools">
                                     <a href="{{ route('warehouse.stock-in.create') }}" class="btn btn-primary">
-                                        <i class="fa-solid fa-plus"></i> Tambah Data
+                                        <i class="fa-solid fa-plus"></i> Tambah Stock
                                     </a>
                                 </div>
                             </div>
@@ -58,11 +58,11 @@
                                                     </td>
                                                     <td>{{ $data->kode_barang }}</td>
                                                     <td>
-                                                        ({{ $data->master_barang->kode_barang }})
-                                                        {{ $data->master_barang->nama_barang }}
+                                                        ({{ $data->stock_monitor->master_barang->kode_barang }})
+                                                        {{ $data->stock_monitor->master_barang->nama_barang }}
                                                     </td>
-                                                    <td>{{ $data->master_barang->tipe_barang->name }}</td>
-                                                    <td>{{ $data->master_barang->nama_vendor }}</td>
+                                                    <td>{{ $data->stock_monitor->master_barang->tipe_barang->name }}</td>
+                                                    <td>{{ $data->stock_monitor->master_barang->nama_vendor }}</td>
                                                     <td>
                                                         @if ($data->tipe_stock == 'satuan')
                                                             {{ number_format($data->qty, 0) }}
@@ -70,8 +70,8 @@
                                                             {{ $data->panjang }} x {{ $data->lebar }}
                                                         @endif
                                                     </td>
-                                                    <td>{{ $data->master_barang->satuan }}</td>
-                                                    <td>{{ $data->created_at }}</td>
+                                                    <td>{{ $data->stock_monitor->master_barang->satuan }}</td>
+                                                    <td>{{ $data->created_at->diffForHumans() }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>

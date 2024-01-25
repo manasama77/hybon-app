@@ -26,7 +26,7 @@ return new class extends Migration
             $table->enum('metode', ['pure', 'skinning']);
             $table->integer('dp')->default(0);
             $table->integer('harga_jual')->default(0);
-            $table->foreignIdFor(BarangJadi::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(BarangJadi::class)->nullable()->constrained()->nullOnDelete();
             $table->string('nama_customer');
             $table->string('alamat');
             $table->string('no_telp');

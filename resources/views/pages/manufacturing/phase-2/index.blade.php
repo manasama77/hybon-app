@@ -52,28 +52,30 @@
                                             @foreach ($datas as $data)
                                                 <tr>
                                                     <td>
-                                                        @if ($data->revisi_manufacturing_2 > 0)
-                                                            <button type="button" class="btn btn-warning"
-                                                                onclick="showEdit('{{ $data->id }}')">
-                                                                Revisi
+                                                        <div class="btn-group">
+                                                            @if ($data->revisi_manufacturing_2 > 0)
+                                                                <button type="button" class="btn btn-warning"
+                                                                    onclick="showEdit('{{ $data->id }}')">
+                                                                    Revisi
+                                                                </button>
+                                                            @endif
+                                                            @if ($data->revisi_manufacturing_2 == 0)
+                                                                <button type="button" class="btn btn-info"
+                                                                    onclick="showEdit('{{ $data->id }}')">
+                                                                    Edit
+                                                                </button>
+                                                            @endif
+                                                            <button type="button" class="btn btn-success"
+                                                                onclick="askMove('{{ $data->id }}')">
+                                                                Submit
                                                             </button>
-                                                        @endif
-                                                        @if ($data->revisi_manufacturing_2 == 0)
-                                                            <button type="button" class="btn btn-info"
-                                                                onclick="showEdit('{{ $data->id }}')">
-                                                                Edit
-                                                            </button>
-                                                        @endif
-                                                        <button type="button" class="btn btn-success"
-                                                            onclick="askMove('{{ $data->id }}')">
-                                                            Submit
-                                                        </button>
+                                                        </div>
                                                     </td>
                                                     <td>{{ $data->code_order }}</td>
                                                     <td>{{ $data->title }}</td>
                                                     <td>{{ $data->motif->name }}</td>
                                                     <td>{{ strtoupper($data->metode) }}</td>
-                                                    <td>{{ $data->barang_jadi->name }}</td>
+                                                    <td>{{ $data->barang_jadi->name ?? '-' }}</td>
                                                     <td>{{ $data->order_from->name }}</td>
                                                     <td>{{ $data->nama_customer }}</td>
                                                     <td>{{ $data->alamat }}</td>

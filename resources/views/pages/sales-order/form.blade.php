@@ -65,7 +65,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="barang_jadi_id">Barang Jadi</label>
-                                        <select class="form-control" id="barang_jadi_id" name="barang_jadi_id" required>
+                                        <select class="form-control" id="barang_jadi_id" name="barang_jadi_id">
                                             <option value=""></option>
                                             @foreach ($barang_jadis as $barang_jadi)
                                                 <option @selected(old('barang_jadi_id') == $barang_jadi->id) value="{{ $barang_jadi->id }}">
@@ -145,7 +145,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-12 d-flex justify-content-end">
+                        <div class="col-12 d-flex justify-content-end mb-5">
                             <a href="{{ route('sales-order') }}" class="btn btn-dark mr-1">
                                 <i class="fa-solid fa-backward"></i> Kembali
                             </a>

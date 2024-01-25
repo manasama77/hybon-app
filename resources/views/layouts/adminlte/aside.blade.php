@@ -55,31 +55,31 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{ route('manufacturing-1') }}" class="nav-link active">
+                            <a href="{{ route('manufacturing-1') }}" class="nav-link">
                                 <i class="nav-icon fa-solid fa-1"></i>
                                 <p>Phase 1</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('manufacturing-2') }}" class="nav-link active">
+                            <a href="{{ route('manufacturing-2') }}" class="nav-link">
                                 <i class="nav-icon fa-solid fa-2"></i>
                                 <p>Phase 2</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('manufacturing-3') }}" class="nav-link active">
+                            <a href="{{ route('manufacturing-3') }}" class="nav-link">
                                 <i class="nav-icon fa-solid fa-3"></i>
                                 <p>Phase 3</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('manufacturing-cutting') }}" class="nav-link active">
+                            <a href="{{ route('manufacturing-cutting') }}" class="nav-link">
                                 <i class="nav-icon fa-solid fa-scissors"></i>
                                 <p>Cutting</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('manufacturing-infuse') }}" class="nav-link active">
+                            <a href="{{ route('manufacturing-infuse') }}" class="nav-link">
                                 <i class="nav-icon fa-solid fa-glass-water-droplet"></i>
                                 <p>Infuse</p>
                             </a>
@@ -96,19 +96,19 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{ route('finishing-1') }}" class="nav-link active">
+                            <a href="{{ route('finishing-1') }}" class="nav-link">
                                 <i class="nav-icon fa-solid fa-1"></i>
                                 <p>Finishing 1</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('finishing-2') }}" class="nav-link active">
+                            <a href="{{ route('finishing-2') }}" class="nav-link">
                                 <i class="nav-icon fa-solid fa-2"></i>
                                 <p>Finishing 2</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('finishing-3') }}" class="nav-link active">
+                            <a href="{{ route('finishing-3') }}" class="nav-link">
                                 <i class="nav-icon fa-solid fa-3"></i>
                                 <p>Finishing 3</p>
                             </a>
@@ -125,13 +125,13 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{ route('rfs') }}" class="nav-link active">
+                            <a href="{{ route('rfs') }}" class="nav-link">
                                 <i class="nav-icon fa-solid fa-hourglass-start"></i>
                                 <p>Pending</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('rfs-lunas') }}" class="nav-link active">
+                            <a href="{{ route('rfs-lunas') }}" class="nav-link">
                                 <i class="nav-icon fa-solid fa-clipboard-check"></i>
                                 <p>Lunas</p>
                             </a>
@@ -148,19 +148,24 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{ route('warehouse.master-barang') }}" class="nav-link active">
+                            <a href="{{ route('warehouse.master-barang') }}" class="nav-link">
                                 <i class="nav-icon fa-solid fa-boxes-stacked"></i>
                                 <p>Master Barang</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('warehouse.stock-in') }}" class="nav-link active">
+                            <a href="{{ route('warehouse.stock-monitor') }}" class="nav-link">
+                                <i class="nav-icon fa-solid fa-magnifying-glass-chart"></i <p>Stock Monitor</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('warehouse.stock-in') }}" class="nav-link">
                                 <i class="nav-icon fa-solid fa-right-to-bracket"></i>
                                 <p>Stock Masuk</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link active">
+                            <a href="{{ route('warehouse.stock-out') }}" class="nav-link">
                                 <i class="nav-icon fa-solid fa-right-from-bracket"></i>
                                 <p>Stock Keluar</p>
                             </a>
@@ -177,37 +182,37 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{ route('data-reference.barang-jadi') }}" class="nav-link active">
+                            <a href="{{ route('data-reference.barang-jadi') }}" class="nav-link">
                                 <i class="nav-icon fa-solid fa-table-list"></i>
                                 <p>Barang Jadi</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('data-reference.motif') }}" class="nav-link active">
+                            <a href="{{ route('data-reference.motif') }}" class="nav-link">
                                 <i class="nav-icon fa-solid fa-table-list"></i>
                                 <p>Motif</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('data-reference.tipe-barang') }}" class="nav-link active">
+                            <a href="{{ route('data-reference.tipe-barang') }}" class="nav-link">
                                 <i class="nav-icon fa-solid fa-table-list"></i>
                                 <p>Tipe Barang</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('data-reference.order-from') }}" class="nav-link active">
+                            <a href="{{ route('data-reference.order-from') }}" class="nav-link">
                                 <i class="nav-icon fa-solid fa-table-list"></i>
                                 <p>Order From</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('data-reference.metode-molding') }}" class="nav-link active">
+                            <a href="{{ route('data-reference.metode-molding') }}" class="nav-link">
                                 <i class="nav-icon fa-solid fa-table-list"></i>
                                 <p>Metode Molding</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('data-reference.sub-molding') }}" class="nav-link active">
+                            <a href="{{ route('data-reference.sub-molding') }}" class="nav-link">
                                 <i class="nav-icon fa-solid fa-table-list"></i>
                                 <p>Sub Molding</p>
                             </a>

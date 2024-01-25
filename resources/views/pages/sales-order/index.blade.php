@@ -50,27 +50,32 @@
                                                 <th>DP</th>
                                                 <th>Harga Jual</th>
                                                 <th>Input By</th>
-                                                <th>Notes</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($datas as $data)
                                                 <tr>
                                                     <td>
-                                                        <a href="{{ route('sales-order.edit', $data->id) }}"
-                                                            class="btn btn-info">
-                                                            <i class="fa-solid fa-pencil"></i>
-                                                        </a>
-                                                        <button type="button" class="btn btn-success"
-                                                            onclick="askMove('{{ $data->id }}')">
-                                                            <i class="fa-solid fa-arrow-right"></i>
-                                                        </button>
+                                                        <div class="btn-group">
+                                                            <button type="button" class="btn btn-danger"
+                                                                onclick="askDelete('{{ $data->id }}')">
+                                                                <i class="fa-solid fa-trash"></i>
+                                                            </button>
+                                                            <a href="{{ route('sales-order.edit', $data->id) }}"
+                                                                class="btn btn-info">
+                                                                <i class="fa-solid fa-pencil"></i>
+                                                            </a>
+                                                            <button type="button" class="btn btn-success"
+                                                                onclick="askMove('{{ $data->id }}')">
+                                                                <i class="fa-solid fa-arrow-right"></i>
+                                                            </button>
+                                                        </div>
                                                     </td>
                                                     <td>{{ $data->code_order }}</td>
                                                     <td>{{ $data->title }}</td>
                                                     <td>{{ $data->motif->name }}</td>
                                                     <td>{{ strtoupper($data->metode) }}</td>
-                                                    <td>{{ $data->barang_jadi->name }}</td>
+                                                    <td>{{ $data->barang_jadi->name ?? '-' }}</td>
                                                     <td>{{ $data->order_from->name }}</td>
                                                     <td>{{ $data->nama_customer }}</td>
                                                     <td>{{ $data->alamat }}</td>
@@ -78,7 +83,6 @@
                                                     <td>{{ number_format($data->dp) }}</td>
                                                     <td>{{ number_format($data->harga_jual) }}</td>
                                                     <td>{{ $data->create_name->name }}</td>
-                                                    <td>{{ $data->notes }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -98,73 +102,6 @@
         $(document).ready(function() {
             $('table').DataTable();
         })
-
-        function askDelete(id) {
-            Swal.fire({
-                title: 'Hapus Data?',
-                text: "Anda yakin ingin menghapus data ini?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, Hapus!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // window.location = "/data-reference/motif/destroy/" + id
-                    processDestroy(id)
-                }
-            })
-        }
-
-        function processDestroy(id) {
-            $.ajax({
-                url: "/data-reference/motif/destroy/" + id,
-                method: "POST",
-                beforeSend: function() {
-                    $.blockUI({
-                        message: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>',
-                        css: {
-                            border: 'none',
-                            padding: '15px',
-                            backgroundColor: 'transparent',
-                            '-webkit-border-radius': '10px',
-                            '-moz-border-radius': '10px',
-                            opacity: .5,
-                            color: '#fff',
-                        },
-                        baseZ: 9999,
-                    })
-                }
-            }).fail(function(e) {
-                $.unblockUI();
-
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: e.responseText
-                })
-            }).done(function(e) {
-                $.unblockUI();
-
-                if (e.success) {
-                    Swal.fire(
-                        'Terhapus!',
-                        'Data telah di hapus.',
-                        'success'
-                    ).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location = "{{ route('data-reference.motif') }}"
-                        }
-                    })
-                } else {
-                    Swal.fire(
-                        'Gagal!',
-                        e.message,
-                        'error'
-                    )
-                }
-            })
-        }
 
         function askMove(id) {
             Swal.fire({
@@ -216,6 +153,72 @@
                     Swal.fire(
                         'Berhasil!',
                         e.message,
+                        'success'
+                    ).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location = "{{ route('sales-order') }}"
+                        }
+                    })
+                } else {
+                    Swal.fire(
+                        'Gagal!',
+                        e.message,
+                        'error'
+                    )
+                }
+            })
+        }
+
+        function askDelete(id) {
+            Swal.fire({
+                title: 'Hapus Data?',
+                text: "Anda yakin ingin menghapus data ini?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Hapus!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    processDestroy(id)
+                }
+            })
+        }
+
+        function processDestroy(id) {
+            $.ajax({
+                url: "/sales-order/destroy/" + id,
+                method: "POST",
+                beforeSend: function() {
+                    $.blockUI({
+                        message: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>',
+                        css: {
+                            border: 'none',
+                            padding: '15px',
+                            backgroundColor: 'transparent',
+                            '-webkit-border-radius': '10px',
+                            '-moz-border-radius': '10px',
+                            opacity: .5,
+                            color: '#fff',
+                        },
+                        baseZ: 9999,
+                    })
+                }
+            }).fail(function(e) {
+                $.unblockUI();
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: e.responseText
+                })
+            }).done(function(e) {
+                $.unblockUI();
+
+                if (e.success) {
+                    Swal.fire(
+                        'Terhapus!',
+                        'Data telah di hapus.',
                         'success'
                     ).then((result) => {
                         if (result.isConfirmed) {

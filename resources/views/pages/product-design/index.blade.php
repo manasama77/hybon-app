@@ -45,27 +45,28 @@
                                                 <th>DP</th>
                                                 <th>Harga Jual</th>
                                                 <th>Input By</th>
-                                                <th>Notes</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($datas as $data)
                                                 <tr>
                                                     <td>
-                                                        <button type="button" class="btn btn-info"
-                                                            onclick="showEdit('{{ $data->id }}', '{{ $data->metode }}')">
-                                                            <i class="fa-solid fa-pencil"></i>
-                                                        </button>
-                                                        <button type="button" class="btn btn-success"
-                                                            onclick="askMove('{{ $data->id }}')">
-                                                            <i class="fa-solid fa-arrow-right"></i>
-                                                        </button>
+                                                        <div class="btn-group">
+                                                            <button type="button" class="btn btn-info"
+                                                                onclick="showEdit('{{ $data->id }}', '{{ $data->metode }}')">
+                                                                <i class="fa-solid fa-pencil"></i>
+                                                            </button>
+                                                            <button type="button" class="btn btn-success"
+                                                                onclick="askMove('{{ $data->id }}')">
+                                                                <i class="fa-solid fa-arrow-right"></i>
+                                                            </button>
+                                                        </div>
                                                     </td>
                                                     <td>{{ $data->code_order }}</td>
                                                     <td>{{ $data->title }}</td>
                                                     <td>{{ $data->motif->name }}</td>
                                                     <td>{{ strtoupper($data->metode) }}</td>
-                                                    <td>{{ $data->barang_jadi->name }}</td>
+                                                    <td>{{ $data->barang_jadi->name ?? '-' }}</td>
                                                     <td>{{ $data->order_from->name }}</td>
                                                     <td>{{ $data->nama_customer }}</td>
                                                     <td>{{ $data->alamat }}</td>
@@ -73,7 +74,6 @@
                                                     <td>{{ number_format($data->dp) }}</td>
                                                     <td>{{ number_format($data->harga_jual) }}</td>
                                                     <td>{{ $data->create_name->name }}</td>
-                                                    <td>{{ $data->notes }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -105,7 +105,7 @@
                         </div>
                         <div class="form-group">
                             <label for="title_pure">Title</label>
-                            <input type="text" class="form-control" id="title_pure" name="title_pure" required />
+                            <input type="text" class="form-control" id="title_pure" name="title_pure" readonly />
                         </div>
                         <div class="form-group">
                             <label for="dp_pure">DP</label>
@@ -146,6 +146,7 @@
                                         <th><i class="fa-solid fa-cogs"></i></th>
                                         <th>Status</th>
                                         <th>Date Time</th>
+                                        <th>By</th>
                                     </tr>
                                 </thead>
                                 <tbody id="v_status_pure"></tbody>
@@ -490,6 +491,7 @@
                             `<td><button type="button" class="btn btn-danger" onclick="processDestroyStatusPure(${r.id})"><i class="fa-solid fa-trash"></i></button></td>`
                         htmlnya += `<td>${r.notes}</td>`
                         htmlnya += `<td>${r.created_at}</td>`
+                        htmlnya += `<td>${r.created_name.name}</td>`
                         htmlnya += '</tr>'
                     })
                     $('#v_status_pure').html(htmlnya)
@@ -524,7 +526,6 @@
                 url: `{{ route('sales-order.update_sales_order_pure') }}`,
                 method: 'post',
                 data: {
-                    title_pure: $('#title_pure').val(),
                     dp_pure: $('#dp_pure').val(),
                     sub_molding_id_pure: $('#sub_molding_id_pure').val(),
                     cost_molding_pure: $('#cost_molding_pure').val(),
