@@ -43,7 +43,6 @@
                                                 <th>Tipe Barang</th>
                                                 <th>Vendor</th>
                                                 <th>Satuan</th>
-                                                <th>Harga Jual</th>
                                                 <th>Tipe Stock</th>
                                             </tr>
                                         </thead>
@@ -65,7 +64,6 @@
                                                     <td>{{ $data->tipe_barang->name }}</td>
                                                     <td>{{ $data->nama_vendor }}</td>
                                                     <td>{{ $data->satuan }}</td>
-                                                    <td>Rp.{{ number_format($data->harga_jual, 2) }}</td>
                                                     <td>{{ $data->tipe_stock }}</td>
                                                 </tr>
                                             @endforeach

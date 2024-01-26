@@ -17,7 +17,6 @@ class MasterBarang extends Model
         'nama_vendor',
         'tipe_stock',
         'satuan',
-        'harga_jual',
         'created_at',
         'updated_at',
         'deleted_at',

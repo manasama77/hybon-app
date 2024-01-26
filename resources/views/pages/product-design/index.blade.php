@@ -44,6 +44,11 @@
                                                 <th>No Telp Customer</th>
                                                 <th>DP</th>
                                                 <th>Harga Jual</th>
+                                                <th>Metode Molding</th>
+                                                <th>Sub Molding</th>
+                                                <th>Cost Molding</th>
+                                                <th>Besaran Carbon</th>
+                                                <th>Harga Material Skinning</th>
                                                 <th>Input By</th>
                                             </tr>
                                         </thead>
@@ -73,6 +78,14 @@
                                                     <td>{{ $data->no_telp }}</td>
                                                     <td>{{ number_format($data->dp) }}</td>
                                                     <td>{{ number_format($data->harga_jual) }}</td>
+                                                    <td>{{ $data->sub_molding->metode_molding->name ?? '-' }}</td>
+                                                    <td>{{ $data->sub_molding->name ?? '-' }}</td>
+                                                    <td>{{ number_format($data->cost_molding_pure ?? 0, 2) }}</td>
+                                                    <td>
+                                                        {{ number_format($data->panjang_skinning ?? 0, 2) }} x
+                                                        {{ number_format($data->lebar_skinning ?? 0, 2) }}
+                                                    </td>
+                                                    <td>{{ number_format($data->harga_material_skinning ?? 0, 2) }}</td>
                                                     <td>{{ $data->create_name->name }}</td>
                                                 </tr>
                                             @endforeach
@@ -183,8 +196,7 @@
                         </div>
                         <div class="form-group">
                             <label for="title_skinning">Title</label>
-                            <input type="text" class="form-control" id="title_skinning" name="title_skinning"
-                                required />
+                            <input type="text" class="form-control" id="title_skinning" readonly />
                         </div>
                         <div class="form-group">
                             <label for="dp_skinning">DP</label>

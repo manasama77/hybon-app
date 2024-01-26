@@ -91,6 +91,14 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="form-group">
+                                        <label for="harga_jual">Harga Jual</label>
+                                        <input type="text" class="form-control" id="harga_jual" name="harga_jual"
+                                            value="{{ old('harga_jual') }}" required />
+                                        @if ($errors->has('harga_jual'))
+                                            <span class="text-danger">{{ $errors->first('harga_jual') }}</span>
+                                        @endif
+                                    </div>
                                     <div class="card-footer d-flex justify-content-end">
                                         <a href="{{ route('warehouse.stock-in') }}" class="btn btn-dark mr-1">
                                             <i class="fa-solid fa-backward"></i> Kembali

@@ -142,6 +142,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/master-barang/destroy/{id}', [MasterBarangController::class, 'destroy'])->name('warehouse.master-barang.destroy');
 
         Route::get('/stock-monitor', [StockMonitorController::class, 'index'])->name('warehouse.stock-monitor');
+        Route::get('/stock-monitor/edit/{id}', [StockMonitorController::class, 'edit'])->name('warehouse.stock-monitor.edit');
+        Route::post('/stock-monitor/update/{id}', [StockMonitorController::class, 'update'])->name('warehouse.stock-monitor.update');
 
         Route::get('/stock-in', [StockInController::class, 'index'])->name('warehouse.stock-in');
         Route::get('/stock-in/create', [StockInController::class, 'create'])->name('warehouse.stock-in.create');

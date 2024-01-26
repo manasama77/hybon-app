@@ -44,6 +44,9 @@
                                                 <th>No Telp Customer</th>
                                                 <th>DP</th>
                                                 <th>Harga Jual</th>
+                                                <th>Metode Molding</th>
+                                                <th>Sub Molding</th>
+                                                <th>Cost Molding</th>
                                                 <th>Input By</th>
                                                 <th>Notes</th>
                                             </tr>
@@ -82,6 +85,9 @@
                                                     <td>{{ $data->no_telp }}</td>
                                                     <td>{{ number_format($data->dp) }}</td>
                                                     <td>{{ number_format($data->harga_jual) }}</td>
+                                                    <td>{{ $data->sub_molding->metode_molding->name ?? '-' }}</td>
+                                                    <td>{{ $data->sub_molding->name ?? '-' }}</td>
+                                                    <td>{{ number_format($data->cost_molding_pure ?? 0, 2) }}</td>
                                                     <td>{{ $data->create_name->name }}</td>
                                                     <td>{{ $data->notes }}</td>
                                                 </tr>
@@ -139,7 +145,9 @@
                                 @foreach ($stocks as $stock)
                                     <option value="{{ $stock->id }}" data-satuan="{{ $stock->satuan }}"
                                         data-tipe_stock="{{ $stock->tipe_stock }}">
-                                        {{ $stock->kode_barang }}</option>
+                                        {{ $stock->kode_barang }}
+                                        {{ $stock->tipe_stock == 'lembar' ? '(' . $stock->panjang . ' x ' . $stock->lebar . ')' : '' }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
@@ -205,6 +213,7 @@
 @section('aku_jawa')
     <script>
         let temp_sales_order_id
+        let temp_metode
 
         $(document).ready(function() {
             $('table').DataTable();
@@ -214,6 +223,7 @@
                 $('.satuan').text(satuan)
 
                 let tipe_stock = $('#stock_id :selected').data('tipe_stock')
+                temp_metode = tipe_stock
                 if (tipe_stock == "lembar") {
                     $('#group_lembar').show();
                     $('#group_satuan').hide();
@@ -285,13 +295,24 @@
             $('#btn_tambah_material').on('click', () => {
                 let stock_id = $('#stock_id').val()
                 let qty = $('#qty').val()
+                let panjang = $('#panjang').val()
+                let lebar = $('#lebar').val()
 
                 if (stock_id.length == 0) {
                     return Swal.fire('Oops!', 'Material belum dipilih', 'warning')
                 }
 
-                if (qty.length == 0 || qty == 0) {
-                    return Swal.fire('Oops!', 'QTY belum diisi', 'warning')
+                if (temp_metode == "lembar") {
+                    if (panjang.length == 0 || panjang == 0) {
+                        return Swal.fire('Oops!', 'Panjang belum diisi', 'warning')
+                    }
+                    if (lebar.length == 0 || lebar == 0) {
+                        return Swal.fire('Oops!', 'Lebar belum diisi', 'warning')
+                    }
+                } else {
+                    if (qty.length == 0 || qty == 0) {
+                        return Swal.fire('Oops!', 'QTY belum diisi', 'warning')
+                    }
                 }
 
                 prosesTambahMaterial()
@@ -410,8 +431,11 @@
                 dataType: 'json',
                 data: {
                     sales_order_id: temp_sales_order_id,
+                    metode: temp_metode,
                     stock_id: $('#stock_id').val(),
-                    qty: $('#qty').val()
+                    qty: $('#qty').val(),
+                    panjang: $('#panjang').val(),
+                    lebar: $('#lebar').val(),
                 },
                 beforeSend: function() {
                     $('#v_material').block({

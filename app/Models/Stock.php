@@ -17,6 +17,7 @@ class Stock extends Model
         'panjang',
         'lebar',
         'qty',
+        'harga_jual',
         'status',
         'sales_order_id',
         'created_at',

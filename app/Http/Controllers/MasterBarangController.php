@@ -60,7 +60,6 @@ class MasterBarangController extends Controller
             'nama_vendor'    => ['required', 'max:255', 'string'],
             'tipe_stock'     => ['required', 'in:satuan,lembar'],
             'satuan'         => ['required', 'max:50', 'string'],
-            'harga_jual'     => ['required'],
         ]);
 
         try {
@@ -75,7 +74,6 @@ class MasterBarangController extends Controller
                 'nama_vendor'    => $request->nama_vendor,
                 'tipe_stock'     => $request->tipe_stock,
                 'satuan'         => $request->satuan,
-                'harga_jual'     => $request->harga_jual,
                 'created_by'     => Auth::user()->id,
                 'updated_by'     => Auth::user()->id,
             ];
@@ -118,7 +116,6 @@ class MasterBarangController extends Controller
                 'nama_vendor'    => ['required', 'max:255', 'string'],
                 'tipe_stock'     => ['required',  'in:satuan,lembar'],
                 'satuan'         => ['required', 'max:50', 'string'],
-                'harga_jual'     => ['required'],
             ]);
 
             $motif                 = MasterBarang::find($id);
@@ -127,7 +124,6 @@ class MasterBarangController extends Controller
             $motif->nama_vendor    = $request->nama_vendor;
             $motif->tipe_stock     = $request->tipe_stock;
             $motif->satuan         = $request->satuan;
-            $motif->harga_jual     = $request->harga_jual;
             $motif->save();
 
             DB::commit();

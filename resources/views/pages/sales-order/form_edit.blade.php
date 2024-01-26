@@ -65,7 +65,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="barang_jadi_id">Barang</label>
-                                        <select class="form-control" id="barang_jadi_id" name="barang_jadi_id" required>
+                                        <select class="form-control" id="barang_jadi_id" name="barang_jadi_id">
                                             <option value=""></option>
                                             @foreach ($barang_jadis as $barang_jadi)
                                                 <option @selected($datas->barang_jadi_id == $barang_jadi->id) value="{{ $barang_jadi->id }}">

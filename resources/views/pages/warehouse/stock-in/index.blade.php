@@ -44,6 +44,7 @@
                                                 <th>Vendor</th>
                                                 <th>Stock</th>
                                                 <th>Satuan</th>
+                                                <th>Harga Jual</th>
                                                 <th>Tanggal Stock</th>
                                             </tr>
                                         </thead>
@@ -71,6 +72,7 @@
                                                         @endif
                                                     </td>
                                                     <td>{{ $data->stock_monitor->master_barang->satuan }}</td>
+                                                    <td>{{ number_format($data->harga_jual, 2) }}</td>
                                                     <td>{{ $data->created_at->diffForHumans() }}</td>
                                                 </tr>
                                             @endforeach

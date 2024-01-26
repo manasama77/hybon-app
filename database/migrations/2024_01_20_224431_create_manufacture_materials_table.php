@@ -2,6 +2,7 @@
 
 use App\Models\SalesOrder;
 use App\Models\Stock;
+use App\Models\StockMonitor;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,8 +17,11 @@ return new class extends Migration
         Schema::create('manufacture_materials', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(SalesOrder::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Stock::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(StockMonitor::class)->constrained()->cascadeOnDelete();
+            $table->enum('metode', ['lembar', 'satuan']);
             $table->integer('qty');
+            $table->decimal('panjang')->default(0);
+            $table->decimal('lebar')->default(0);
             $table->decimal('price', 10, 2);
             $table->string('notes');
             $table->enum('phase_seq', [1, 2, 3, 'cutting', 'infuse', 'finishing 1', 'finishing 2', 'finishing 3'])->default(1);

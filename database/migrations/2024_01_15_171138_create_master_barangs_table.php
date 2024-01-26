@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('nama_vendor');
             $table->enum('tipe_stock', ['satuan', 'lembar']);
             $table->string('satuan');
-            $table->string('harga_jual');
             $table->timestamps();
             $table->softDeletes();
             $table->integer('created_by');

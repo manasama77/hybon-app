@@ -41,9 +41,9 @@
                                                 <th>Kode Barang</th>
                                                 <th>Barang</th>
                                                 <th>Tipe Barang</th>
-                                                <th>Harga Jual</th>
                                                 <th>Stock</th>
                                                 <th>Satuan</th>
+                                                <th>Harga Jual</th>
                                                 <th>Tanggal Pembuatan</th>
                                                 <th>Tanggal Perubahan</th>
                                             </tr>
@@ -52,10 +52,16 @@
                                             @foreach ($datas as $data)
                                                 <tr>
                                                     <td>
-                                                        <button type="button" class="btn btn-danger"
-                                                            onclick="askDelete('{{ $data->id }}')">
-                                                            <i class="fa-solid fa-trash"></i>
-                                                        </button>
+                                                        <div class="btn-group">
+                                                            <a href="{{ route('warehouse.stock-monitor.edit', $data->id) }}"
+                                                                class="btn btn-info">
+                                                                <i class="fa-solid fa-money-bill"></i>
+                                                            </a>
+                                                            <button type="button" class="btn btn-danger"
+                                                                onclick="askDelete('{{ $data->id }}')">
+                                                                <i class="fa-solid fa-trash"></i>
+                                                            </button>
+                                                        </div>
                                                     </td>
                                                     <td>{{ $data->kode_barang }}</td>
                                                     <td>
@@ -63,7 +69,6 @@
                                                         {{ $data->master_barang->nama_barang }}
                                                     </td>
                                                     <td>{{ $data->master_barang->tipe_barang->name }}</td>
-                                                    <td>{{ number_format($data->master_barang->harga_jual, 0) }}</td>
                                                     <td>
                                                         @if ($data->tipe_stock == 'satuan')
                                                             {{ number_format($data->qty, 0) }}
@@ -72,6 +77,7 @@
                                                         @endif
                                                     </td>
                                                     <td>{{ $data->master_barang->satuan }}</td>
+                                                    <td>{{ number_format($data->harga_jual, 2) }}</td>
                                                     <td>{{ $data->created_at->diffForHumans() }}</td>
                                                     <td>{{ $data->updated_at->diffForHumans() }}</td>
                                                 </tr>

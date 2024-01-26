@@ -17,9 +17,10 @@ return new class extends Migration
             $table->string('kode_barang');
             $table->foreignIdFor(MasterBarang::class)->constrained()->onDelete('cascade');
             $table->enum('tipe_stock', ['satuan', 'lembar']);
-            $table->decimal('panjang')->default(0);
-            $table->decimal('lebar')->default(0);
+            $table->decimal('panjang', 10, 2)->default(0);
+            $table->decimal('lebar', 10, 2)->default(0);
             $table->decimal('qty')->default(0);
+            $table->decimal('harga_jual', 10, 2)->default(0);
             $table->timestamps();
             $table->softDeletes();
             $table->integer('created_by');

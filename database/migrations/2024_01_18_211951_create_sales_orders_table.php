@@ -6,6 +6,7 @@ use App\Models\MetodeMolding;
 use App\Models\Motif;
 use App\Models\OrderFrom;
 use App\Models\Stock;
+use App\Models\StockMonitor;
 use App\Models\SubMolding;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -50,7 +51,7 @@ return new class extends Migration
             $table->decimal('panjang_skinning', 10, 2)->nullable()->default(0);
             $table->decimal('lebar_skinning', 10, 2)->nullable()->default(0);
             $table->decimal('harga_material_skinning', 10, 2)->nullable()->default(0);
-            $table->foreignIdFor(Stock::class)->nullable()->constrained()->nullOnDelete();
+            $table->foreignIdFor(StockMonitor::class)->nullable()->constrained()->nullOnDelete();
             $table->string('photo_manufacturing_1')->nullable();
             $table->integer('revisi_manufacturing_1')->default(0);
             $table->string('photo_manufacturing_2')->nullable();

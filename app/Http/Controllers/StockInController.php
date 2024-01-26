@@ -153,9 +153,12 @@ class StockInController extends Controller
         if ($tipe_stock == "satuan") {
             $kode_barang = $kode_barang . "-" . $now->format('Ymd');
         } else {
-            $last_seq = StockMonitor::where('master_barang_id', $master_barang_id)->where('tipe_stock', 'lembar')->count();
+            $last_seq = StockMonitor::where('master_barang_id', $master_barang_id)
+                ->where('tipe_stock', 'lembar')
+                ->whereDate('created_at', $now)
+                ->count();
             $last_seq++;
-            $kode_barang = $kode_barang . "-" . $now->format('Ymd') . "-" . $last_seq;
+            $kode_barang = $kode_barang . "-" . $now->format('Ymd') . "-" . $last_seq . "-0";
         }
         return $kode_barang;
     }

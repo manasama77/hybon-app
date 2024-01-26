@@ -13,8 +13,11 @@ class ManufactureMaterial extends Model
 
     protected $fillable = [
         'sales_order_id',
-        'stock_id',
+        'stock_monitor_id',
+        'metode',
         'qty',
+        'panjang',
+        'lebar',
         'price',
         'notes',
         'phase_seq',
@@ -29,9 +32,9 @@ class ManufactureMaterial extends Model
         return $this->belongsTo(SalesOrder::class);
     }
 
-    public function stock()
+    public function stock_monitor()
     {
-        return $this->belongsTo(Stock::class);
+        return $this->belongsTo(StockMonitor::class);
     }
 
     public function getCreatedAtAttribute($value)

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->decimal('panjang')->default(0);
             $table->decimal('lebar')->default(0);
             $table->decimal('qty')->default(0);
+            $table->decimal('harga_jual', 10, 2)->default(0);
             $table->enum('status', ['in', 'out', 'repair']);
             $table->foreignIdFor(SalesOrder::class)->nullable();
             $table->timestamps();

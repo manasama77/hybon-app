@@ -81,14 +81,6 @@
                                             <span class="text-danger">{{ $errors->first('satuan') }}</span>
                                         @endif
                                     </div>
-                                    <div class="form-group">
-                                        <label for="harga_jual">Harga Jual</label>
-                                        <input type="text" class="form-control" id="harga_jual" name="harga_jual"
-                                            value="{{ old('harga_jual') ?? $datas->harga_jual }}" required />
-                                        @if ($errors->has('harga_jual'))
-                                            <span class="text-danger">{{ $errors->first('harga_jual') }}</span>
-                                        @endif
-                                    </div>
                                 </div>
                                 <div class="card-footer d-flex justify-content-end">
                                     <a href="{{ route('warehouse.master-barang') }}" class="btn btn-dark mr-1">

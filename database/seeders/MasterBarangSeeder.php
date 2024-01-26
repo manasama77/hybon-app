@@ -20,7 +20,6 @@ class MasterBarangSeeder extends Seeder
             'nama_vendor'    => 'test vendor',
             'tipe_stock'     => 'lembar',
             'satuan'         => 'cm²',
-            'harga_jual'     => 100000,
             'created_by'     => 1,
             'updated_by'     => 1,
         ]);
@@ -32,7 +31,6 @@ class MasterBarangSeeder extends Seeder
             'nama_vendor'    => 'test vendor',
             'tipe_stock'     => 'satuan',
             'satuan'         => 'pcs',
-            'harga_jual'     => 1000,
             'created_by'     => 1,
             'updated_by'     => 1,
         ]);

@@ -29,7 +29,7 @@ class SalesOrder extends Model
         'panjang_skinning',
         'lebar_skinning',
         'harga_material_skinning',
-        'stock_id',
+        'stock_monitor_id',
         'photo_manufacturing_1',
         'revisi_manufacturing_1',
         'photo_manufacturing_2',
@@ -71,9 +71,9 @@ class SalesOrder extends Model
         return $this->belongsTo(SubMolding::class);
     }
 
-    public function stock()
+    public function stock_monitor()
     {
-        return $this->belongsTo(Stock::class);
+        return $this->belongsTo(StockMonitor::class);
     }
 
     public function manufacture_materials()

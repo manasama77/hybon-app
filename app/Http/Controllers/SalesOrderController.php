@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BarangJadi;
-use App\Models\ManufactureMaterial;
 use Exception;
 use Carbon\Carbon;
 use App\Models\Motif;
-use App\Models\OrderFrom;
-use App\Models\SalesOrder;
-use App\Models\PureStatusLog;
-use Illuminate\Http\Request;
-use App\Models\SalesOrderSeq;
 use App\Models\Stock;
+use App\Models\OrderFrom;
+use App\Models\BarangJadi;
+use App\Models\SalesOrder;
 use App\Models\TrackingLog;
+use App\Models\StockMonitor;
+use Illuminate\Http\Request;
+use App\Models\PureStatusLog;
+use App\Models\SalesOrderSeq;
 use Illuminate\Support\Facades\DB;
+use App\Models\ManufactureMaterial;
 use Illuminate\Support\Facades\Auth;
 
 class SalesOrderController extends Controller
@@ -222,7 +223,7 @@ class SalesOrderController extends Controller
             'title'          => ['required', 'max:255', 'string'],
             'motif_id'       => ['required', 'exists:motifs,id'],
             'metode'         => ['required', 'in:pure,skinning'],
-            'barang_jadi_id' => ['required', 'exists:barang_jadis,id'],
+            'barang_jadi_id' => ['nullable', 'exists:barang_jadis,id'],
             'dp'             => ['required'],
             'harga_jual'     => ['required'],
             'nama_customer'  => ['required', 'max:255'],
@@ -809,9 +810,12 @@ class SalesOrderController extends Controller
         if ($tipe_stock == "satuan") {
             $kode_barang = $kode_barang . "-" . $now->format('Ymd');
         } else {
-            $last_seq = Stock::where('master_barang_id', $master_barang_id)->where('tipe_stock', 'lembar')->count();
+            $last_seq = StockMonitor::where('master_barang_id', $master_barang_id)
+                ->where('tipe_stock', 'lembar')
+                ->whereDate('created_at', $now)
+                ->count();
             $last_seq++;
-            $kode_barang = $kode_barang . "-" . $now->format('Ymd') . "-" . $last_seq;
+            $kode_barang = $kode_barang . "-" . $now->format('Ymd') . "-" . $last_seq . "-0";
         }
         return $kode_barang;
     }

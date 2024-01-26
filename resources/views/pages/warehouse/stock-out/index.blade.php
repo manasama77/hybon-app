@@ -39,6 +39,7 @@
                                                 <th>Out By</th>
                                                 <th>Stock</th>
                                                 <th>Satuan</th>
+                                                <th>Harga Jual</th>
                                                 <th>Sales Order</th>
                                                 <th>Tanggal Stock</th>
                                             </tr>
@@ -68,6 +69,7 @@
                                                     </td>
                                                     <td>{{ $data->master_barang->satuan }}</td>
                                                     <td>{{ $data->sales_order->code_order ?? '-' }}</td>
+                                                    <td>{{ number_format($data->harga_jual, 2) }}</td>
                                                     <td>{{ $data->created_at }}</td>
                                                 </tr>
                                             @endforeach
