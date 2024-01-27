@@ -563,7 +563,9 @@
                 $('#cost_molding_pure').val()
                 $('#sales_order_id_pure').val()
 
-                Swal.fire('Berhasil!', 'Data Berhasil disimpan!', 'success')
+                Swal.fire('Berhasil!', 'Data Berhasil disimpan!', 'success').then(() => {
+                    window.location.reload();
+                })
             })
         }
 

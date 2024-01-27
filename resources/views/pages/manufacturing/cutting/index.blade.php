@@ -142,13 +142,6 @@
                             <label for="stock_id">Material</label>
                             <select class="form-control" id="stock_id" name="stock_id">
                                 <option value=""></option>
-                                @foreach ($stocks as $stock)
-                                    <option value="{{ $stock->id }}" data-satuan="{{ $stock->satuan }}"
-                                        data-tipe_stock="{{ $stock->tipe_stock }}">
-                                        {{ $stock->kode_barang }}
-                                        {{ $stock->tipe_stock == 'lembar' ? '(' . $stock->panjang . ' x ' . $stock->lebar . ')' : '' }}
-                                    </option>
-                                @endforeach
                             </select>
                         </div>
                         <div id="group_satuan" class="form-group" style="display: none;">
@@ -417,6 +410,7 @@
                     $('.img-thumbnail').attr('src', ``)
                 }
 
+                getMaterial()
                 getListMaterial()
 
                 $('#modal_edit').modal('show')
@@ -472,6 +466,7 @@
                         $('#stock_id').val('')
                         $('#qty').val('')
 
+                        getMaterial()
                         getListMaterial()
                     })
                 } else {
@@ -518,10 +513,18 @@
                     let htmlnya = '';
 
                     data.forEach(el => {
-                        let kode_barang = el.stock.kode_barang
+                        let kode_barang = el.stock_monitor.kode_barang
+                        let panjang = el.panjang
+                        let lebar = el.lebar
                         let qty = el.qty
-                        let satuan = el.stock.master_barang.satuan
+                        let satuan = el.stock_monitor.master_barang.satuan
                         let notes = el.notes
+                        let metode = el.metode
+
+                        let isi = qty
+                        if (metode == "lembar") {
+                            isi = `${panjang} x ${lebar}`
+                        }
 
                         htmlnya += `
                             <tr>
@@ -531,7 +534,7 @@
                                     </button>
                                 </td>
                                 <td>${kode_barang}</td>
-                                <td>${qty}</td>
+                                <td>${isi}</td>
                                 <td>${satuan}</td>
                                 <td>${notes}</td>
                             </tr>
@@ -602,6 +605,60 @@
                         'error'
                     )
                 }
+            })
+        }
+
+        function getMaterial() {
+            $.ajax({
+                url: `{{ route('api.get_materials') }}`,
+                method: "get",
+                dataType: 'json',
+                beforeSend: function() {
+                    $('#stock_id').attr('disabled', true).html('<option value=""></option>')
+                }
+            }).fail(function(e) {
+                $('#stock_id').attr('disabled', false)
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: e.responseText
+                })
+            }).done(function(e) {
+                if (e.success) {
+                    let data = e.data
+                    let htmlnya = '<option value=""></option>';
+
+                    data.forEach(el => {
+                        let id = el.id
+                        let kode_barang = el.kode_barang
+                        let panjang = el.panjang
+                        let lebar = el.lebar
+                        let qty = el.qty
+                        let satuan = el.satuan
+                        let tipe_stock = el.tipe_stock
+                        let ccd = "";
+                        if (tipe_stock == "lembar") {
+                            ccd = `(${panjang} x ${lebar})`
+                        }
+
+                        htmlnya += `
+                            <option value="${id}" data-satuan="${satuan}"
+                                data-tipe_stock="${tipe_stock}">
+                                ${kode_barang} ${ccd}
+                            </option>
+                        `
+                    });
+
+                    $('#stock_id').html(htmlnya)
+                } else {
+                    Swal.fire(
+                        'Gagal!',
+                        e.message,
+                        'error'
+                    )
+                }
+                $('#stock_id').attr('disabled', false)
             })
         }
     </script>

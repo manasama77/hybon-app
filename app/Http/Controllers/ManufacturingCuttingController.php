@@ -56,8 +56,8 @@ class ManufacturingCuttingController extends Controller
     {
         try {
             $data = ManufactureMaterial::with([
-                'stock',
-                'stock.master_barang',
+                'stock_monitor',
+                'stock_monitor.master_barang',
             ])
                 ->where('sales_order_id', $sales_order_id)
                 ->where('phase_seq', 'cutting')
@@ -73,13 +73,14 @@ class ManufacturingCuttingController extends Controller
     {
         try {
             DB::beginTransaction();
+            $phase = "cutting";
 
             $sales_order_id   = $request->sales_order_id;
             $metode           = $request->metode;
             $stock_monitor_id = $request->stock_id;
-            $qty              = $request->qty;
-            $panjang          = $request->panjang;
-            $lebar            = $request->lebar;
+            $qty              = $request->qty * 1;
+            $panjang          = $request->panjang * 1;
+            $lebar            = $request->lebar * 1;
 
             $sales_order                  = SalesOrder::find($sales_order_id);
             if (!$sales_order) {
@@ -133,7 +134,6 @@ class ManufacturingCuttingController extends Controller
                     $x->updated_by       = auth()->user()->id;
                     $x->save();
                 } elseif ($sisa_panjang == 0 || $sisa_lebar == 0) {
-                    throw new Exception("1 bidang");
                     // sisa 1 bidang
 
                     // penentuan harga per cm
@@ -168,16 +168,19 @@ class ManufacturingCuttingController extends Controller
                     $prefix          = $arr_kode_barang[0];
                     $dt              = $arr_kode_barang[1];
                     $seq             = $arr_kode_barang[2];
-                    $ord             = $arr_kode_barang[3]++;
+                    $ord             = $arr_kode_barang[3] + 1;
+
                     $new_kode_barang = $prefix . '-' . $dt . '-' . $seq . '-' . $ord;
 
                     $new_panjang = $sisa_panjang;
                     $new_lebar   = $sisa_lebar;
 
+                    // throw new Exception($new_panjang . " " . $new_lebar);
+
                     if ($sisa_panjang == 0) {
-                        $new_panjang = $sisa_lebar;
+                        $new_panjang = $stock_panjang;
                     } else {
-                        $new_lebar = $sisa_panjang;
+                        $new_lebar = $stock_lebar;
                     }
 
                     // harga jual sisa 1
@@ -214,7 +217,6 @@ class ManufacturingCuttingController extends Controller
                     $x_new_stock_1->updated_by       = auth()->user()->id;
                     $x_new_stock_1->save();
                 } else {
-                    throw new Exception("2 bidang");
                     // sisa 2 bidang
 
                     // penentuan harga per cm
@@ -249,7 +251,7 @@ class ManufacturingCuttingController extends Controller
                     $prefix          = $arr_kode_barang[0];
                     $dt              = $arr_kode_barang[1];
                     $seq             = $arr_kode_barang[2];
-                    $ord             = $arr_kode_barang[3]++;
+                    $ord             = $arr_kode_barang[3] + 1;
                     $new_kode_barang = $prefix . '-' . $dt . '-' . $seq . '-' . $ord;
 
                     // harga jual sisa 1
@@ -291,7 +293,7 @@ class ManufacturingCuttingController extends Controller
                     $prefix          = $arr_kode_barang[0];
                     $dt              = $arr_kode_barang[1];
                     $seq             = $arr_kode_barang[2];
-                    $ord             = $arr_kode_barang[3]++;
+                    $ord             = $arr_kode_barang[3] + 1;
                     $new_kode_barang = $prefix . '-' . $dt . '-' . $seq . '-' . $ord;
 
                     // harga jual sisa 2
@@ -377,7 +379,7 @@ class ManufacturingCuttingController extends Controller
             $exec->lebar            = $lebar;
             $exec->price            = $harga_jual_potong;
             $exec->notes            = $notes;
-            $exec->phase_seq        = 'cutting';
+            $exec->phase_seq        = $phase;
             $exec->revisi_seq       = $revisi_manufacturing_cutting;
             $exec->created_by       = auth()->user()->id;
             $exec->updated_by       = auth()->user()->id;

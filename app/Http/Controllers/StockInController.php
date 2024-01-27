@@ -52,6 +52,7 @@ class StockInController extends Controller
             'panjang'          => ['nullable', 'min:1'],
             'lebar'            => ['nullable', 'min:1'],
             'qty'              => ['nullable', 'min:1'],
+            'harga_jual'       => ['required', 'min:1'],
         ]);
 
         try {
@@ -64,7 +65,11 @@ class StockInController extends Controller
                 if ($check_stock) {
                     $stock_monitor_id = $check_stock->id;
                     $kode_barang      = $check_stock->kode_barang;
-                    StockMonitor::find($stock_monitor_id)->increment('qty', $request->qty);
+                    $x                = StockMonitor::find($stock_monitor_id);
+                    $x->harga_jual    = $request->harga_jual;
+                    $x->updated_by    = auth()->user()->id;
+                    $x->increment('qty', $request->qty);
+                    $x->save();
                 } else {
                     $kode_barang   = $this->generate_kode_barang($request->master_barang_id, $master_barang->tipe_stock, $master_barang->kode_barang);
 
@@ -75,6 +80,7 @@ class StockInController extends Controller
                     $exec->panjang          = "0";
                     $exec->lebar            = "0";
                     $exec->qty              = $request->qty;
+                    $exec->harga_jual       = $request->harga_jual;
                     $exec->created_by       = auth()->user()->id;
                     $exec->updated_by       = auth()->user()->id;
                     $exec->save();
@@ -88,6 +94,7 @@ class StockInController extends Controller
                     'panjang'          => 0,
                     'lebar'            => 0,
                     'qty'              => $request->qty ?? 0,
+                    'harga_jual'       => $request->harga_jual,
                     'status'           => 'in',
                     'created_by'       => Auth::user()->id,
                     'updated_by'       => Auth::user()->id,
@@ -103,6 +110,7 @@ class StockInController extends Controller
                 $exec->panjang          = $request->panjang;
                 $exec->lebar            = $request->lebar;
                 $exec->qty              = 0;
+                $exec->harga_jual       = $request->harga_jual;
                 $exec->created_by       = auth()->user()->id;
                 $exec->updated_by       = auth()->user()->id;
                 $exec->save();
@@ -115,6 +123,7 @@ class StockInController extends Controller
                     'panjang'          => $request->panjang ?? 0,
                     'lebar'            => $request->lebar ?? 0,
                     'qty'              => $request->qty ?? 0,
+                    'harga_jual'       => $request->harga_jual ?? 0,
                     'status'           => 'in',
                     'created_by'       => Auth::user()->id,
                     'updated_by'       => Auth::user()->id,

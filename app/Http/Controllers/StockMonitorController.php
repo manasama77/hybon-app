@@ -15,7 +15,12 @@ class StockMonitorController extends Controller
         $datas = StockMonitor::with([
             'master_barang',
             'master_barang.tipe_barang',
-        ])->latest()->get();
+        ])
+            ->where('panjang', '!=', 0)
+            ->where('lebar', '!=', 0)
+            ->orWhere('qty', '!=', 0)
+            ->latest()
+            ->get();
 
         $data = [
             'page_title' => $page_title,
