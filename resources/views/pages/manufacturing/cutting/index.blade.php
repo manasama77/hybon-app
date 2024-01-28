@@ -154,7 +154,7 @@
                             </div>
                         </div>
                         <div id="group_lembar" class="form-group" style="display: none;">
-                            <label for="qty">QTY</label>
+                            <label for="panjang">Ruang</label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">P</span>
@@ -184,6 +184,7 @@
                                         <th>Jumlah</th>
                                         <th>Satuan</th>
                                         <th>Notes</th>
+                                        <th>Harga Jual</th>
                                     </tr>
                                 </thead>
                                 <tbody id="v_material"></tbody>
@@ -465,6 +466,8 @@
                     ).then((result) => {
                         $('#stock_id').val('')
                         $('#qty').val('')
+                        $('#panjang').val('')
+                        $('#lebar').val('')
 
                         getMaterial()
                         getListMaterial()
@@ -520,6 +523,7 @@
                         let satuan = el.stock_monitor.master_barang.satuan
                         let notes = el.notes
                         let metode = el.metode
+                        let price = el.price
 
                         let isi = qty
                         if (metode == "lembar") {
@@ -537,6 +541,7 @@
                                 <td>${isi}</td>
                                 <td>${satuan}</td>
                                 <td>${notes}</td>
+                                <td>${price}</td>
                             </tr>
                             `
                     });
@@ -555,7 +560,7 @@
 
         function destroyMaterial(id) {
             $.ajax({
-                url: "{{ route('manufacturing-cutting.destroy-material') }}",
+                url: "{{ route('manufacturing-1.destroy-material') }}",
                 method: "post",
                 dataType: "json",
                 data: {
@@ -596,6 +601,7 @@
                         e.message,
                         'success'
                     ).then((result) => {
+                        getMaterial()
                         getListMaterial()
                     })
                 } else {

@@ -115,7 +115,7 @@
                         </div>
                         <div class="form-group">
                             <label for="title">Title</label>
-                            <input type="text" class="form-control" id="title" name="title" required />
+                            <input type="text" class="form-control" id="title" name="title" readonly />
                         </div>
                         <div class="form-group">
                             <label for="dp">DP</label>
@@ -136,21 +136,35 @@
                             <label for="stock_id">Material</label>
                             <select class="form-control" id="stock_id" name="stock_id">
                                 <option value=""></option>
-                                @foreach ($stocks as $stock)
-                                    <option value="{{ $stock->id }}" data-satuan="{{ $stock->satuan }}">
-                                        {{ $stock->kode_barang }}</option>
-                                @endforeach
                             </select>
                         </div>
-                        <div class="form-group">
+                        <div id="group_satuan" class="form-group" style="display: none;">
                             <label for="qty">QTY</label>
                             <div class="input-group">
                                 <input type="number" class="form-control" id="qty" name="qty" />
                                 <div class="input-group-append">
-                                    <span class="input-group-text" id="satuan"></span>
+                                    <span class="input-group-text satuan"></span>
                                 </div>
                             </div>
-
+                        </div>
+                        <div id="group_lembar" class="form-group" style="display: none;">
+                            <label for="panjang">Ruang</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">P</span>
+                                </div>
+                                <input type="number" class="form-control" id="panjang" name="panjang" />
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">x</span>
+                                </div>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">L</span>
+                                </div>
+                                <input type="number" class="form-control" id="lebar" name="lebar" />
+                                <div class="input-group-append">
+                                    <span class="input-group-text satuan"></span>
+                                </div>
+                            </div>
                         </div>
                         <button type="button" id="btn_tambah_material" class="btn btn-info btn-block mb-3">Tambah
                             Material</button>
@@ -164,6 +178,7 @@
                                         <th>Jumlah</th>
                                         <th>Satuan</th>
                                         <th>Notes</th>
+                                        <th>Harga Jual</th>
                                     </tr>
                                 </thead>
                                 <tbody id="v_material"></tbody>
@@ -186,6 +201,7 @@
 @section('aku_jawa')
     <script>
         let temp_sales_order_id
+        let temp_metode
 
         $(document).ready(function() {
             $('table').DataTable();
@@ -208,7 +224,6 @@
             $('#form-edit').on('submit', e => {
                 e.preventDefault()
 
-                let title = $('#title').val()
                 let dp = $('#dp').val()
 
                 let formData = new FormData()
@@ -259,13 +274,24 @@
             $('#btn_tambah_material').on('click', () => {
                 let stock_id = $('#stock_id').val()
                 let qty = $('#qty').val()
+                let panjang = $('#panjang').val()
+                let lebar = $('#lebar').val()
 
                 if (stock_id.length == 0) {
                     return Swal.fire('Oops!', 'Material belum dipilih', 'warning')
                 }
 
-                if (qty.length == 0 || qty == 0) {
-                    return Swal.fire('Oops!', 'QTY belum diisi', 'warning')
+                if (temp_metode == "lembar") {
+                    if (panjang.length == 0 || panjang == 0) {
+                        return Swal.fire('Oops!', 'Panjang belum diisi', 'warning')
+                    }
+                    if (lebar.length == 0 || lebar == 0) {
+                        return Swal.fire('Oops!', 'Lebar belum diisi', 'warning')
+                    }
+                } else {
+                    if (qty.length == 0 || qty == 0) {
+                        return Swal.fire('Oops!', 'QTY belum diisi', 'warning')
+                    }
                 }
 
                 prosesTambahMaterial()
@@ -356,6 +382,7 @@
                 Swal.fire('Gagal!', e.responseText, 'error')
             }).done(e => {
                 console.log(e)
+                let metode = e.data.metode
 
                 $('#code_order').val(e.data.code_order)
                 $('#title').val(e.data.title)
@@ -368,6 +395,7 @@
                     $('.img-thumbnail').attr('src', ``)
                 }
 
+                getMaterial()
                 getListMaterial()
 
                 $('#modal_edit').modal('show')
@@ -382,8 +410,11 @@
                 dataType: 'json',
                 data: {
                     sales_order_id: temp_sales_order_id,
+                    metode: temp_metode,
                     stock_id: $('#stock_id').val(),
-                    qty: $('#qty').val()
+                    qty: $('#qty').val(),
+                    panjang: $('#panjang').val(),
+                    lebar: $('#lebar').val(),
                 },
                 beforeSend: function() {
                     $('#v_material').block({
@@ -419,7 +450,10 @@
                     ).then((result) => {
                         $('#stock_id').val('')
                         $('#qty').val('')
+                        $('#panjang').val('')
+                        $('#lebar').val('')
 
+                        getMaterial()
                         getListMaterial()
                     })
                 } else {
@@ -466,10 +500,19 @@
                     let htmlnya = '';
 
                     data.forEach(el => {
-                        let kode_barang = el.stock.kode_barang
+                        let kode_barang = el.stock_monitor.kode_barang
+                        let panjang = el.panjang
+                        let lebar = el.lebar
                         let qty = el.qty
-                        let satuan = el.stock.master_barang.satuan
+                        let satuan = el.stock_monitor.master_barang.satuan
                         let notes = el.notes
+                        let metode = el.metode
+                        let price = el.price
+
+                        let isi = qty
+                        if (metode == "lembar") {
+                            isi = `${panjang} x ${lebar}`
+                        }
 
                         htmlnya += `
                             <tr>
@@ -479,9 +522,10 @@
                                     </button>
                                 </td>
                                 <td>${kode_barang}</td>
-                                <td>${qty}</td>
+                                <td>${isi}</td>
                                 <td>${satuan}</td>
                                 <td>${notes}</td>
+                                <td>${price}</td>
                             </tr>
                             `
                     });
@@ -500,7 +544,7 @@
 
         function destroyMaterial(id) {
             $.ajax({
-                url: "{{ route('finishing-3.destroy-material') }}",
+                url: "{{ route('manufacturing-1.destroy-material') }}",
                 method: "post",
                 dataType: "json",
                 data: {
@@ -541,6 +585,7 @@
                         e.message,
                         'success'
                     ).then((result) => {
+                        getMaterial()
                         getListMaterial()
                     })
                 } else {
@@ -550,6 +595,60 @@
                         'error'
                     )
                 }
+            })
+        }
+
+        function getMaterial() {
+            $.ajax({
+                url: `{{ route('api.get_materials') }}`,
+                method: "get",
+                dataType: 'json',
+                beforeSend: function() {
+                    $('#stock_id').attr('disabled', true).html('<option value=""></option>')
+                }
+            }).fail(function(e) {
+                $('#stock_id').attr('disabled', false)
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: e.responseText
+                })
+            }).done(function(e) {
+                if (e.success) {
+                    let data = e.data
+                    let htmlnya = '<option value=""></option>';
+
+                    data.forEach(el => {
+                        let id = el.id
+                        let kode_barang = el.kode_barang
+                        let panjang = el.panjang
+                        let lebar = el.lebar
+                        let qty = el.qty
+                        let satuan = el.satuan
+                        let tipe_stock = el.tipe_stock
+                        let ccd = "";
+                        if (tipe_stock == "lembar") {
+                            ccd = `(${panjang} x ${lebar})`
+                        }
+
+                        htmlnya += `
+                            <option value="${id}" data-satuan="${satuan}"
+                                data-tipe_stock="${tipe_stock}">
+                                ${kode_barang} ${ccd}
+                            </option>
+                        `
+                    });
+
+                    $('#stock_id').html(htmlnya)
+                } else {
+                    Swal.fire(
+                        'Gagal!',
+                        e.message,
+                        'error'
+                    )
+                }
+                $('#stock_id').attr('disabled', false)
             })
         }
     </script>

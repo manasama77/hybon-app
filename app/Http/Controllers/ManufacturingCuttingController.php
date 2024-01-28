@@ -27,26 +27,9 @@ class ManufacturingCuttingController extends Controller
             ->latest()
             ->get();
 
-        $stocks = StockMonitor::select([
-            'stock_monitors.id',
-            'stock_monitors.kode_barang',
-            'stock_monitors.panjang',
-            'stock_monitors.lebar',
-            'stock_monitors.qty',
-            'master_barangs.satuan',
-            'stock_monitors.tipe_stock',
-        ])
-            ->leftJoin('master_barangs', 'master_barangs.id', '=', 'stock_monitors.master_barang_id')
-            ->where('stock_monitors.panjang', '!=', 0)
-            ->where('stock_monitors.lebar', '!=', 0)
-            ->orWhere('stock_monitors.qty', '!=', 0)
-            ->orderBy('stock_monitors.kode_barang', 'asc')
-            ->get();
-
         $data = [
             'page_title' => $page_title,
             'datas'      => $datas,
-            'stocks'     => $stocks,
         ];
 
         return view('pages.manufacturing.cutting.index', $data);
@@ -73,7 +56,7 @@ class ManufacturingCuttingController extends Controller
     {
         try {
             DB::beginTransaction();
-            $phase = "cutting";
+            $phase = "cutting"; // edit ini
 
             $sales_order_id   = $request->sales_order_id;
             $metode           = $request->metode;
@@ -82,12 +65,12 @@ class ManufacturingCuttingController extends Controller
             $panjang          = $request->panjang * 1;
             $lebar            = $request->lebar * 1;
 
-            $sales_order                  = SalesOrder::find($sales_order_id);
+            $sales_order = SalesOrder::find($sales_order_id);
             if (!$sales_order) {
                 throw new Exception('Order Not Found');
             }
 
-            $revisi_manufacturing_cutting = $sales_order->revisi_manufacturing_cutting;
+            $rev = $sales_order->revisi_manufacturing_cutting; // edit ini
 
             $stock_check = StockMonitor::with('master_barang')->find($stock_monitor_id);
             if (!$stock_check) {
@@ -367,8 +350,8 @@ class ManufacturingCuttingController extends Controller
 
             $notes = "New";
 
-            if ($revisi_manufacturing_cutting > 0) {
-                $notes = "Revisi $revisi_manufacturing_cutting";
+            if ($rev > 0) {
+                $notes = "Revisi $rev";
             }
 
             $exec                   = new ManufactureMaterial();
@@ -380,7 +363,7 @@ class ManufacturingCuttingController extends Controller
             $exec->price            = $harga_jual_potong;
             $exec->notes            = $notes;
             $exec->phase_seq        = $phase;
-            $exec->revisi_seq       = $revisi_manufacturing_cutting;
+            $exec->revisi_seq       = $rev;
             $exec->created_by       = auth()->user()->id;
             $exec->updated_by       = auth()->user()->id;
             $exec->save();
@@ -391,25 +374,6 @@ class ManufacturingCuttingController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
-        }
-    }
-
-    public function destroy_material(Request $request)
-    {
-        try {
-            $id               = $request->id;
-            $data             = ManufactureMaterial::find($id);
-            $data->deleted_by = auth()->user()->id;
-
-            //return stock
-            $data->stock->increment('qty', $data->qty);
-
-            $data->save();
-            $data->delete();
-
-            return response()->json(['success' => true, 'data' => $data, 'message' => "Data Terhapus"]);
-        } catch (Exception $e) {
-            return response()->json(['success' => false, 'data' => [], 'message' => $e->getMessage()]);
         }
     }
 
