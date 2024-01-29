@@ -36,8 +36,8 @@ class Manufacturing2Controller extends Controller
     {
         try {
             $data = ManufactureMaterial::with([
-                'stock',
-                'stock.master_barang',
+                'stock_monitor',
+                'stock_monitor.master_barang',
             ])
                 ->where('sales_order_id', $sales_order_id)
                 ->where('phase_seq', 2)

@@ -20,3 +20,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/get_materials', [ApiController::class, 'get_materials'])->name('api.get_materials');
+Route::get('/get_count_sidebar', [ApiController::class, 'get_count_sidebar'])->name('api.get_count_sidebar');

@@ -106,6 +106,93 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 return this.href == url || url.href.indexOf(this.href) == 0;
             }
         }).parentsUntil(".nav-sidebar > .nav-treeview").addClass('menu-open').prev('a').addClass('active');
+
+        $(document).ready(function() {
+            getCountSidebar()
+            setInterval(() => {
+                getCountSidebar()
+            }, 60000);
+        })
+
+        function getCountSidebar() {
+            $.ajax({
+                url: '{{ route('api.get_count_sidebar') }}',
+                method: 'get',
+                dataType: 'json',
+                beforeSend: function() {
+                    $('#c_sales_order').block({
+                        message: '<i class="fas fa-spinner fa-pulse"></i>',
+                    })
+                    $('#c_product_design').block({
+                        message: '<i class="fas fa-spinner fa-pulse"></i>',
+                    })
+                    $('#c_manufacturing_1').block({
+                        message: '<i class="fas fa-spinner fa-pulse"></i>',
+                    })
+                    $('#c_manufacturing_2').block({
+                        message: '<i class="fas fa-spinner fa-pulse"></i>',
+                    })
+                    $('#c_manufacturing_3').block({
+                        message: '<i class="fas fa-spinner fa-pulse"></i>',
+                    })
+                    $('#c_manufacturing_cutting').block({
+                        message: '<i class="fas fa-spinner fa-pulse"></i>',
+                    })
+                    $('#c_manufacturing_infuse').block({
+                        message: '<i class="fas fa-spinner fa-pulse"></i>',
+                    })
+                    $('#c_finishing_1').block({
+                        message: '<i class="fas fa-spinner fa-pulse"></i>',
+                    })
+                    $('#c_finishing_2').block({
+                        message: '<i class="fas fa-spinner fa-pulse"></i>',
+                    })
+                    $('#c_finishing_3').block({
+                        message: '<i class="fas fa-spinner fa-pulse"></i>',
+                    })
+                    $('#c_rfs_pending').block({
+                        message: '<i class="fas fa-spinner fa-pulse"></i>',
+                    })
+                    $('#c_rfs_lunas').block({
+                        message: '<i class="fas fa-spinner fa-pulse"></i>',
+                    })
+                }
+            }).fail(e => {
+                console.log(e)
+                Swal.fire(
+                    'Gagal!',
+                    e.message,
+                    'error'
+                )
+                $('#c_sales_order').unblock();
+                $('#c_product_design').unblock();
+                $('#c_manufacturing_1').unblock();
+                $('#c_manufacturing_2').unblock();
+                $('#c_manufacturing_3').unblock();
+                $('#c_manufacturing_cutting').unblock();
+                $('#c_manufacturing_infuse').unblock();
+                $('#c_finishing_1').unblock();
+                $('#c_finishing_2').unblock();
+                $('#c_finishing_3').unblock();
+                $('#c_rfs_pending').unblock();
+                $('#c_rfs_lunas').unblock();
+            }).done(e => {
+                console.log(e)
+                $('#c_sales_order').unblock().text(e.c_sales_order)
+                $('#c_product_design').unblock().text(e.c_product_design)
+                $('#c_manufacturing_1').unblock().text(e.c_manufacturing_1)
+                $('#c_manufacturing_2').unblock().text(e.c_manufacturing_2)
+                $('#c_manufacturing_3').unblock().text(e.c_manufacturing_3)
+                $('#c_manufacturing_cutting').unblock().text(e.c_manufacturing_cutting)
+                $('#c_manufacturing_infuse').unblock().text(e.c_manufacturing_infuse)
+                $('#c_finishing_1').unblock().text(e.c_finishing_1)
+                $('#c_finishing_2').unblock().text(e.c_finishing_2)
+                $('#c_finishing_3').unblock().text(e.c_finishing_3)
+                $('#c_rfs_pending').unblock().text(e.c_rfs_pending)
+                $('#c_rfs_lunas').unblock().text(e.c_rfs_lunas)
+
+            })
+        }
     </script>
 </body>
 

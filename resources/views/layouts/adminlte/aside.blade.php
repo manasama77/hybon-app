@@ -33,7 +33,7 @@
                     <a href="{{ route('sales-order') }}" class="nav-link">
                         <i class="nav-icon fa-solid fa-clipboard"></i>
                         <p>
-                            Sales Order
+                            Sales Order <span class="badge badge-primary right" id="c_sales_order">0</span>
                         </p>
                     </a>
                 </li>
@@ -41,7 +41,7 @@
                     <a href="{{ route('product-design') }}" class="nav-link">
                         <i class="nav-icon fas fa-clipboard"></i>
                         <p>
-                            Product Design
+                            Product Design <span class="badge badge-primary right" id="c_product_design">0</span>
                         </p>
                     </a>
                 </li>
@@ -57,31 +57,42 @@
                         <li class="nav-item">
                             <a href="{{ route('manufacturing-1') }}" class="nav-link">
                                 <i class="nav-icon fa-solid fa-1"></i>
-                                <p>Phase 1</p>
+                                <p>
+                                    Phase 1 <span class="badge badge-primary right" id="c_manufacturing_1">0</span>
+                                </p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('manufacturing-2') }}" class="nav-link">
                                 <i class="nav-icon fa-solid fa-2"></i>
-                                <p>Phase 2</p>
+                                <p>
+                                    Phase 2 <span class="badge badge-primary right" id="c_manufacturing_2">0</span>
+                                </p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('manufacturing-3') }}" class="nav-link">
                                 <i class="nav-icon fa-solid fa-3"></i>
-                                <p>Phase 3</p>
+                                <p>
+                                    Phase 3 <span class="badge badge-primary right" id="c_manufacturing_3">0</span>
+                                </p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('manufacturing-cutting') }}" class="nav-link">
                                 <i class="nav-icon fa-solid fa-scissors"></i>
-                                <p>Cutting</p>
+                                <p>
+                                    Cutting <span class="badge badge-primary right"
+                                        id="c_manufacturing_cutting">0</span>
+                                </p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('manufacturing-infuse') }}" class="nav-link">
                                 <i class="nav-icon fa-solid fa-glass-water-droplet"></i>
-                                <p>Infuse</p>
+                                <p>
+                                    Infuse <span class="badge badge-primary right" id="c_manufacturing_infuse">0</span>
+                                </p>
                             </a>
                         </li>
                     </ul>
@@ -98,19 +109,25 @@
                         <li class="nav-item">
                             <a href="{{ route('finishing-1') }}" class="nav-link">
                                 <i class="nav-icon fa-solid fa-1"></i>
-                                <p>Finishing 1</p>
+                                <p>
+                                    Finishing 1 <span class="badge badge-primary right" id="c_finishing_1">0</span>
+                                </p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('finishing-2') }}" class="nav-link">
                                 <i class="nav-icon fa-solid fa-2"></i>
-                                <p>Finishing 2</p>
+                                <p>
+                                    Finishing 2 <span class="badge badge-primary right" id="c_finishing_2">0</span>
+                                </p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('finishing-3') }}" class="nav-link">
                                 <i class="nav-icon fa-solid fa-3"></i>
-                                <p>Finishing 3</p>
+                                <p>
+                                    Finishing 3 <span class="badge badge-primary right" id="c_finishing_3">0</span>
+                                </p>
                             </a>
                         </li>
                     </ul>
@@ -127,13 +144,17 @@
                         <li class="nav-item">
                             <a href="{{ route('rfs') }}" class="nav-link">
                                 <i class="nav-icon fa-solid fa-hourglass-start"></i>
-                                <p>Pending</p>
+                                <p>
+                                    Pending <span class="badge badge-primary right" id="c_rfs_pending">0</span>
+                                </p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('rfs-lunas') }}" class="nav-link">
                                 <i class="nav-icon fa-solid fa-clipboard-check"></i>
-                                <p>Lunas</p>
+                                <p>
+                                    Lunas <span class="badge badge-primary right" id="c_rfs_lunas">0</span>
+                                </p>
                             </a>
                         </li>
                     </ul>

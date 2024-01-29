@@ -209,7 +209,17 @@
 
             $('#stock_id').on('change', () => {
                 let satuan = $('#stock_id :selected').data('satuan')
-                $('#satuan').text(satuan)
+                $('.satuan').text(satuan)
+
+                let tipe_stock = $('#stock_id :selected').data('tipe_stock')
+                temp_metode = tipe_stock
+                if (tipe_stock == "lembar") {
+                    $('#group_lembar').show();
+                    $('#group_satuan').hide();
+                } else {
+                    $('#group_lembar').hide();
+                    $('#group_satuan').show();
+                }
             })
 
             $('#photo').on('change', function() {
