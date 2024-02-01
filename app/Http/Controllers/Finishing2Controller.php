@@ -326,20 +326,19 @@ class Finishing2Controller extends Controller
 
                 $harga_jual_potong = $stock_harga_jual * $qty;
 
-                $x                   = new Stock();
-                $x->kode_barang      = $kode_barang;
-                $x->stock_monitor_id = $stock_monitor_id;
-                $x->tipe_stock       = $metode;
-                $x->panjang          = 0;
-                $x->lebar            = 0;
-                $x->qty              = $qty;
-                $x->harga_jual       = $harga_jual_potong;
-                $x->status           = 'out';
-                $x->created_at       = Carbon::now();
-                $x->updated_at       = Carbon::now();
-                $x->created_by       = auth()->user()->id;
-                $x->updated_by       = auth()->user()->id;
-                $x->save();
+                Stock::create([
+                    'kode_barang'      => $kode_barang,
+                    'stock_monitor_id' => $stock_monitor_id,
+                    'tipe_stock'       => $metode,
+                    'panjang'          => 0,
+                    'lebar'            => 0,
+                    'qty'              => $qty,
+                    'harga_jual'       => $harga_jual_potong,
+                    'status'           => 'out',
+                    'sales_order_id'   => $sales_order_id,
+                    'created_by'       => auth()->user()->id,
+                    'updated_by'       => auth()->user()->id,
+                ]);
 
                 $stock_check->panjang    = 0;
                 $stock_check->lebar      = 0;
@@ -357,6 +356,7 @@ class Finishing2Controller extends Controller
             $exec                   = new ManufactureMaterial();
             $exec->sales_order_id   = $sales_order_id;
             $exec->stock_monitor_id = $stock_monitor_id;
+            $exec->metode           = $metode;
             $exec->qty              = $qty;
             $exec->panjang          = $panjang;
             $exec->lebar            = $lebar;

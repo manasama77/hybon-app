@@ -52,10 +52,12 @@
                                             @foreach ($datas as $data)
                                                 <tr>
                                                     <td>
-                                                        <button type="button" class="btn btn-danger"
-                                                            onclick="askDelete('{{ $data->id }}')">
-                                                            <i class="fa-solid fa-trash"></i>
-                                                        </button>
+                                                        @if ($data->out_stock_count == 0)
+                                                            <button type="button" class="btn btn-danger"
+                                                                onclick="askDelete('{{ $data->id }}')">
+                                                                <i class="fa-solid fa-trash"></i>
+                                                            </button>
+                                                        @endif
                                                     </td>
                                                     <td>{{ $data->kode_barang }}</td>
                                                     <td>

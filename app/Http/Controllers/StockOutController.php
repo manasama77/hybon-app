@@ -15,9 +15,8 @@ class StockOutController extends Controller
             'stock_monitor.master_barang',
             'stock_monitor.master_barang.tipe_barang',
             'sales_order',
-            'sales_order.manufacture_materials',
             'created_name',
-        ])->where('status', 'out')->latest()->get();
+        ])->where('stocks.status', 'out')->get();
 
         $data = [
             'page_title' => $page_title,

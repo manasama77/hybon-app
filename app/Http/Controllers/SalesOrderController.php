@@ -83,16 +83,20 @@ class SalesOrderController extends Controller
         try {
             $data = ManufactureMaterial::select([
                 'manufacture_materials.created_at',
-                'stocks.kode_barang',
+                'stock_monitors.kode_barang',
+                'manufacture_materials.metode',
+                'manufacture_materials.panjang',
+                'manufacture_materials.lebar',
                 'manufacture_materials.qty',
                 'master_barangs.satuan',
+                'manufacture_materials.price',
                 'manufacture_materials.phase_seq',
                 'manufacture_materials.notes',
                 'users.name as created_by',
             ])
                 ->leftJoin('sales_orders', 'sales_orders.id', 'manufacture_materials.sales_order_id')
-                ->leftJoin('stocks', 'stocks.id', 'manufacture_materials.stock_id')
-                ->leftJoin('master_barangs', 'master_barangs.id', 'stocks.master_barang_id')
+                ->leftJoin('stock_monitors', 'stock_monitors.id', 'manufacture_materials.stock_monitor_id')
+                ->leftJoin('master_barangs', 'master_barangs.id', 'stock_monitors.master_barang_id')
                 ->leftJoin('users', 'users.id', 'manufacture_materials.created_by')
                 ->where('sales_orders.id', $id)
                 ->orderBy('manufacture_materials.created_at', 'asc')

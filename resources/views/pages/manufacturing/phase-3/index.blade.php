@@ -518,7 +518,7 @@
                         let satuan = el.stock_monitor.master_barang.satuan
                         let notes = el.notes
                         let metode = el.metode
-                        let price = el.price
+                        let price = el.price_formated
 
                         let isi = qty
                         if (metode == "lembar") {

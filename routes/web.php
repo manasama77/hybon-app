@@ -144,6 +144,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/stock-monitor', [StockMonitorController::class, 'index'])->name('warehouse.stock-monitor');
         Route::get('/stock-monitor/edit/{id}', [StockMonitorController::class, 'edit'])->name('warehouse.stock-monitor.edit');
         Route::post('/stock-monitor/update/{id}', [StockMonitorController::class, 'update'])->name('warehouse.stock-monitor.update');
+        Route::post('/stock-monitor/destroy/{id}', [StockMonitorController::class, 'destroy'])->name('warehouse.stock-monitor.destroy');
 
         Route::get('/stock-in', [StockInController::class, 'index'])->name('warehouse.stock-in');
         Route::get('/stock-in/create', [StockInController::class, 'create'])->name('warehouse.stock-in.create');

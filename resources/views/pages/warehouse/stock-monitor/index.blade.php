@@ -118,7 +118,7 @@
 
         function processDestroy(id) {
             $.ajax({
-                url: "/warehouse/stock-in/destroy/" + id,
+                url: "/warehouse/stock-monitor/destroy/" + id,
                 method: "POST",
                 beforeSend: function() {
                     $.blockUI({
@@ -153,7 +153,7 @@
                         'success'
                     ).then((result) => {
                         if (result.isConfirmed) {
-                            window.location = "{{ route('warehouse.stock-in') }}"
+                            window.location = "{{ route('warehouse.stock-monitor') }}"
                         }
                     })
                 } else {

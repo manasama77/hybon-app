@@ -32,7 +32,7 @@
                                     <table class="table table-bordered table-striped">
                                         <thead class="bg-dark">
                                             <tr>
-                                                <th><i class="fa-solid fa-cogs"></i></th>
+                                                {{-- <th><i class="fa-solid fa-cogs"></i></th> --}}
                                                 <th>Kode Barang</th>
                                                 <th>Barang</th>
                                                 <th>Tipe Barang</th>
@@ -41,25 +41,25 @@
                                                 <th>Satuan</th>
                                                 <th>Harga Jual</th>
                                                 <th>Sales Order</th>
-                                                <th>Tanggal Stock</th>
+                                                <th>Tanggal Out</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($datas as $data)
                                                 <tr>
-                                                    <td>
+                                                    {{-- <td>
                                                         <button type="button" class="btn btn-danger"
                                                             onclick="askDelete('{{ $data->id }}')">
                                                             <i class="fa-solid fa-trash"></i>
                                                         </button>
-                                                    </td>
+                                                    </td> --}}
                                                     <td>{{ $data->kode_barang }}</td>
                                                     <td>
-                                                        ({{ $data->master_barang->kode_barang }})
-                                                        {{ $data->master_barang->nama_barang }}
+                                                        ({{ $data->stock_monitor->master_barang->kode_barang }})
+                                                        {{ $data->stock_monitor->master_barang->nama_barang }}
                                                     </td>
-                                                    <td>{{ $data->master_barang->tipe_barang->name }}</td>
-                                                    <td>{{ $data->created_name ?? '-' }}</td>
+                                                    <td>{{ $data->stock_monitor->master_barang->tipe_barang->name }}</td>
+                                                    <td>{{ $data->created_name->name ?? '-' }}</td>
                                                     <td>
                                                         @if ($data->tipe_stock == 'satuan')
                                                             {{ number_format($data->qty, 0) }}
@@ -67,9 +67,9 @@
                                                             {{ $data->panjang }} x {{ $data->lebar }}
                                                         @endif
                                                     </td>
-                                                    <td>{{ $data->master_barang->satuan }}</td>
-                                                    <td>{{ $data->sales_order->code_order ?? '-' }}</td>
+                                                    <td>{{ $data->stock_monitor->master_barang->satuan }}</td>
                                                     <td>{{ number_format($data->harga_jual, 2) }}</td>
+                                                    <td>{{ $data->sales_order->code_order ?? '-' }}</td>
                                                     <td>{{ $data->created_at }}</td>
                                                 </tr>
                                             @endforeach

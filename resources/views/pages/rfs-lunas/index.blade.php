@@ -86,7 +86,7 @@
     <form id="form-edit">
         <div class="modal fade" id="modal_edit" data-backdrop="static" data-keyboard="false" tabindex="-1"
             aria-labelledby="modal_title" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
+            <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="modal_title_pure">Log Material Data</h5>
@@ -104,6 +104,7 @@
                                         <th>Material</th>
                                         <th>Jumlah</th>
                                         <th>Satuan</th>
+                                        <th>Harga</th>
                                         <th>Notes</th>
                                         <th>By</th>
                                     </tr>
@@ -149,13 +150,21 @@
                 let htmlnya = "";
                 let seq = 1
                 data.forEach(el => {
+                    let isi = el.qty;
+                    if (el.metode == "lembar") {
+                        isi = `${el.panjang} x ${el.lebar}`
+                    }
+
+                    let price = `${new Intl.NumberFormat('id-ID').format(el.price)}`;
+
                     htmlnya += `
                     <tr>
                         <td>${seq}</td>
                         <td>${el.created_at}</td>
                         <td>${el.kode_barang}</td>
-                        <td>${el.qty}</td>
+                        <td>${el.isi}</td>
                         <td>${el.satuan}</td>
+                        <td>${price}</td>
                         <td>${el.phase_seq.toUpperCase()} -  ${el.notes}</td>
                         <td>${el.created_by}</td>
                     </tr>

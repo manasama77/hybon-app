@@ -58,4 +58,16 @@ class StockMonitorController extends Controller
 
         return redirect()->route('warehouse.stock-monitor')->with('success', 'Data created successfully.');
     }
+
+    public function destroy($id)
+    {
+        $exec = StockMonitor::find($id);
+        // $exec->stock()->delete();
+        $exec->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data deleted successfully.',
+        ]);
+    }
 }

@@ -27,6 +27,10 @@ class ManufactureMaterial extends Model
         'deleted_by',
     ];
 
+    protected $appends = [
+        'price_formated',
+    ];
+
     public function sales_order()
     {
         return $this->belongsTo(SalesOrder::class);
@@ -34,7 +38,7 @@ class ManufactureMaterial extends Model
 
     public function stock_monitor()
     {
-        return $this->belongsTo(StockMonitor::class);
+        return $this->belongsTo(StockMonitor::class)->withTrashed();
     }
 
     public function getCreatedAtAttribute($value)
@@ -42,5 +46,10 @@ class ManufactureMaterial extends Model
         $date =  Carbon::parse($value)->timezone('Asia/Jakarta')->locale('id');
         $date->settings(['formatFunction' => 'translatedFormat']);
         return $date->format('l, j F Y; H:i');
+    }
+
+    public function getPriceFormatedAttribute()
+    {
+        return number_format($this->price, 2, ',', '.');
     }
 }

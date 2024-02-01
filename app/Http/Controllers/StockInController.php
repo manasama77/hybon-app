@@ -21,7 +21,9 @@ class StockInController extends Controller
         $datas = Stock::with([
             'stock_monitor.master_barang',
             'stock_monitor.master_barang.tipe_barang',
-        ])->where('status', 'in')->latest()->get();
+        ])->where('status', 'in')->latest()->withTrashed()->withOutStockCount()->get();
+
+        // dd($datas);
 
         $data = [
             'page_title' => $page_title,
@@ -142,7 +144,7 @@ class StockInController extends Controller
 
     public function destroy($id)
     {
-        $data             = Stock::find($id);
+        $data = Stock::find($id);
         if ($data->tipe_stock == 'satuan') {
             $data->stock_monitor()->decrement('qty', $data->qty);
         } else {
