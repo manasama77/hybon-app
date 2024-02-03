@@ -88,7 +88,11 @@
 @section('aku_jawa')
     <script>
         $(document).ready(function() {
-            $('table').DataTable();
+            $('table').DataTable({
+                "order": [
+                    [8, "desc"]
+                ]
+            });
         })
 
         function askDelete(id) {

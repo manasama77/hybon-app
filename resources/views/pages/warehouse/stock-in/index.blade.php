@@ -75,7 +75,7 @@
                                                     </td>
                                                     <td>{{ $data->stock_monitor->master_barang->satuan }}</td>
                                                     <td>{{ number_format($data->harga_jual, 2) }}</td>
-                                                    <td>{{ $data->created_at->diffForHumans() }}</td>
+                                                    <td>{{ $data->created_at }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -93,7 +93,11 @@
 @section('aku_jawa')
     <script>
         $(document).ready(function() {
-            $('table').DataTable();
+            $('table').DataTable({
+                "order": [
+                    [8, "desc"]
+                ],
+            });
         })
 
         function askDelete(id) {

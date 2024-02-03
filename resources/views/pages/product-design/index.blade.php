@@ -203,6 +203,18 @@
                             <input type="number" class="form-control" id="dp_skinning" name="dp_skinning" required />
                         </div>
                         <div class="form-group">
+                            <label for="stock_id">Materials</label>
+                            <select class="form-control" id="stock_id" name="stock_id" required>
+                                <option value=""></option>
+                                @foreach ($stocks as $stock)
+                                    <option value="{{ $stock->id }}">
+                                        {{ $stock->kode_barang }} ({{ $stock->panjang }}x{{ $stock->lebar }}
+                                        {{ $stock->satuan }})
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label for="panjang_skinning">Besaran Carbon</label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
@@ -219,23 +231,6 @@
                                 <input type="number" class="form-control" id="lebar_skinning" name="lebar_skinning"
                                     step="0.01" required />
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="stock_id">Materials</label>
-                            <select class="form-control" id="stock_id" name="stock_id" required>
-                                <option value=""></option>
-                                @foreach ($stocks as $stock)
-                                    <option value="{{ $stock->id }}">
-                                        {{ $stock->kode_barang }} ({{ $stock->panjang }}x{{ $stock->lebar }}
-                                        {{ $stock->satuan }})
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="harga_material_skinning">Harga Material</label>
-                            <input type="number" class="form-control" id="harga_material_skinning"
-                                name="harga_material_skinning" required />
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -403,7 +398,7 @@
                     $('#dp_skinning').val(parseInt(e.data.dp))
                     $('#panjang_skinning').val(e.data.panjang_skinning);
                     $('#lebar_skinning').val(e.data.lebar_skinning);
-                    $('#stock_id').val(e.data.stock_id);
+                    $('#stock_id').val(e.data.stock_monitor_id);
                     $('#harga_material_skinning').val(parseInt(e.data.harga_material_skinning));
                     $('#sales_order_id_skinning').val(id);
                     $('#modal_edit_skinning').modal('show')
@@ -580,7 +575,6 @@
                     lebar_skinning: $('#lebar_skinning').val(),
                     stock_id: $('#stock_id').val(),
                     sales_order_id_skinning: $('#sales_order_id_skinning').val(),
-                    harga_material_skinning: $('#harga_material_skinning').val()
                 },
                 beforeSend: function() {
                     $('#form-edit-skinning').block({
@@ -608,7 +602,9 @@
                 $('#sales_order_id_skinning').val('')
                 $('#harga_material_skinning').val('')
 
-                Swal.fire('Berhasil!', 'Data Berhasil disimpan!', 'success')
+                Swal.fire('Berhasil!', 'Data Berhasil disimpan!', 'success').then(() => {
+                    window.location.reload();
+                })
             })
         }
     </script>
